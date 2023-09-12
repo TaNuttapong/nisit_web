@@ -1,0 +1,23 @@
+img {
+  width: auto;
+  height: 80%;
+}
+.bg {
+  background-color: #a5a5a5;
+  padding: 2% 0%;
+}
+.bg-sch {
+  background-color: #a076f9;
+  padding: 2% 0%;
+}
+.small-input {
+  width: 150px; /* ปรับขนาดตามที่ต้องการ */
+  font-size: 14px; /* ปรับขนาดตัวอักษรตามที่ต้องการ */
+}
+.right {
+  text-align: right;
+  align-self: center;
+}
+.padding {
+  padding: 2% 4%;
+}
