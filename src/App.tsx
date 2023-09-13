@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/login";
 import NavbarCommon from "./common/NavbarCommon";
+import FooterCommon from "./common/FooterCommon";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
           </>
         </Routes>
       </BrowserRouter>
-      
+      <FooterCommon />
     </>
   );
 }

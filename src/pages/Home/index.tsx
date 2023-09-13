@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import { Form, Image } from "react-bootstrap";
 import "../../../public/css/homepage.css";
 import pic_1 from "../../assets/images/picc_1.png";
+import pic_2 from "../../assets/images/picc_2.png";
 
 export default function HomePage() {
   return (
@@ -33,11 +34,45 @@ export default function HomePage() {
           <h1 className="padding">โครงการทั้งหมด</h1>
         </Col>
       </Row>
-      <Row>
+      <Row className="m-4">
         <Col xs={4}>
           <Image src={pic_1} alt="pro" className="" fluid />
         </Col>
-        <Col xs={8}></Col>
+        <Col xs={8}>
+          <h1>ชมรมจิตอาสาสิ่งแวดล้อม</h1>
+          <h3>
+            รายละเอียด................................
+            <br />
+            .........................................
+            <br />
+            .........................................
+            <br />
+            .........................................
+          </h3>
+          <a href="/">
+            <h3>ดาวโหลดเกียรติบัตร....</h3>
+          </a>
+        </Col>
+      </Row>
+      <Row className="m-4">
+        <Col xs={4}>
+          <Image src={pic_2} alt="pro" className="" fluid />
+        </Col>
+        <Col xs={8}>
+          <h1>ชมรมจิตอาสาสิ่งแวดล้อม</h1>
+          <h3>
+            รายละเอียด................................
+            <br />
+            .........................................
+            <br />
+            .........................................
+            <br />
+            .........................................
+          </h3>
+          <a href="/">
+            <h3>ดาวโหลดเกียรติบัตร....</h3>
+          </a>
+        </Col>
       </Row>
     </div>
   );

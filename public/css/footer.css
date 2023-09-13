@@ -1,0 +1,20 @@
+.bg {
+  background-color: #ede4ff;
+}
+.borderright {
+  border-right: solid;
+}
+.img-small {
+  width: 15%;
+  height: 15%;
+  padding: 3%;
+}
+.textlg {
+  font-size: 2rem;
+}
+.borderfull {
+  border: solid;
+}
+.textxl{
+    font-size: 3rem;
+}
