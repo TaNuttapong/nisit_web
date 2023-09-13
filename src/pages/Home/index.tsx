@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Form, Image } from "react-bootstrap";
 import "../../../public/css/homepage.css";
-import pic_1 from "../../assets/images/picc_1.png";
+import pic_1 from "../../assets/images/Pic1.png";
 import pic_2 from "../../assets/images/picc_2.png";
 
 export default function HomePage() {
