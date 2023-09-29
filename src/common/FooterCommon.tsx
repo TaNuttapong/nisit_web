@@ -11,20 +11,20 @@ export default function FooterCommon() {
   return (
     <div className="mt-5 borderfull">
       <Row className="bg">
-        <Col sm={6} className="text-center borderright pt-3 ">
+        <Col sm={12} md={6} className="text-center borderright pt-3">
           <Image src={logonisit} alt="pro" className="" fluid />
-          <Col>
+          <div>
             <Image src={facebook} alt="pro" className="img-small" />
             <Image src={line} alt="pro" className="img-small" />
             <Image src={phone} alt="pro" className="img-small" />
             <strong className="textlg">tel.191</strong>
-          </Col>
+          </div>
         </Col>
-        <Col sm={3} className="text-center">
+        <Col sm={6} md={3} className="text-center">
           <strong className="textxl">Nisit</strong>
           <h2>Home</h2>
         </Col>
-        <Col sm={3} className="text-center">
+        <Col sm={6} md={3} className="text-center">
           <strong className="textxl">ADMIN</strong>
           <h2>Login</h2>
         </Col>

@@ -8,7 +8,7 @@ import "../../public/css/nav.css";
 export default function NavbarCommon() {
   const { pathUrl } = useContext(AppContext);
   return (
-    <Navbar collapseOnSelect expand="lg" className=" bgnav">
+    <Navbar collapseOnSelect expand="lg" className=" bgnav mb-5">
       <Container>
         <Navbar.Brand href="/">
           <img className="imgsmall" src={logo} alt="" />
