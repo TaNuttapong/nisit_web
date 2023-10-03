@@ -5,7 +5,7 @@ interface OptionInstance {
   token?: boolean;
 }
 
-function InstanceHttps({ apiKey, token }: OptionInstance): AxiosInstance {
+function InstanceHttps({ token }: OptionInstance): AxiosInstance {
   const getToken = Cookies.get("token") ?? "";
   const headers: Record<string, string> = {
     "Content-type": "application/json",
