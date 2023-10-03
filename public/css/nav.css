@@ -5,3 +5,7 @@
 .bgnav {
   background-color: #618264;
 }
+.img-responsivenav {
+  max-width: 65%;
+  height: auto;
+}

@@ -1,8 +1,21 @@
 .center {
   align-self: center;
+  text-align: -webkit-center;
 }
 .bg-from {
   background-color: #b0d9b1;
   width: 90%;
-border-radius: 2cm;
+  border-radius: 2cm;
+}
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+@media (max-width: 767px) {
+  .img-responsive {
+    display: none;
+  }
+}
+.h7 {
+  font-size: 90%;
 }

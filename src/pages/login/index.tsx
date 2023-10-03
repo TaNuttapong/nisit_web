@@ -2,25 +2,20 @@ import { Col, Row } from "react-bootstrap";
 import "../../../public/css/login.css";
 
 export default function LoginPage() {
-  const formStyle = {
-    width: "60%",
-    margin: "0 auto",
-  };
-
   return (
     <Row>
-      <Col sm={10} md={6}>
+      <Col sm={10} md={6} className="mt-2">
         <img
           src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
-          className="img-fluid"
+          className="img-responsive "
           alt="Phone image"
         />
       </Col>
-      <Col sm={5} md={6} className="center ">
-        <div className="card card-outline card-primary col-10">
+      <Col sm={5} md={6} className="center mt-5 ">
+        <div className="card card-outline card-primary col-10 ">
           <div className="card-header text-center">
-            <a href="../../index2.html" className="h1">
-              <b>Admin</b>LTE
+            <a href="/" className="h1">
+              <b>ADMIN</b>
             </a>
           </div>
           <div className="card-body">
@@ -57,23 +52,13 @@ export default function LoginPage() {
                     <label htmlFor="remember">Remember Me</label>
                   </div>
                 </div>
-                {/* /.col */}
                 <div className="col-4">
                   <button type="submit" className="btn btn-primary btn-block">
-                    Sign In
+                    <h1 className="h7">Sign In</h1>
                   </button>
                 </div>
-                {/* /.col */}
               </div>
             </form>
-            <div className="social-auth-links text-center mt-2 mb-3">
-              <a href="#" className="btn btn-block btn-primary">
-                <i className="fab fa-facebook mr-2" /> Sign in using Facebook
-              </a>
-              <a href="#" className="btn btn-block btn-danger">
-                <i className="fab fa-google-plus mr-2" /> Sign in using Google+
-              </a>
-            </div>
           </div>
         </div>
       </Col>

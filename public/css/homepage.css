@@ -7,12 +7,12 @@ img {
   padding: 2% 0%;
 }
 .bg-sch {
-  background-color: #a076f9;
+  background-color: #b0d9b1;
   padding: 2% 0%;
 }
 .small-input {
-  width: 150px; /* ปรับขนาดตามที่ต้องการ */
-  font-size: 14px; /* ปรับขนาดตัวอักษรตามที่ต้องการ */
+  width: 150px;
+  font-size: 14px;
 }
 .right {
   text-align: right;
@@ -20,4 +20,27 @@ img {
 }
 .padding {
   padding: 2% 4%;
+}
+@media (max-width: 768px) {
+  h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-image {
+    width: 100%;
+    height: auto;
+  }
+}
+@media (max-width: 768px) {
+  .form-control-sidebar {
+    width: 100%;
+  }
+  .btn-sidebar {
+    width: 100%;
+  }
+}
+.right_sch {
+  justify-content: flex-end;
 }
