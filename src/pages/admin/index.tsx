@@ -1,5 +1,8 @@
-import "../../../public/css/admin_page.css";
+import { useContext } from "react";
+import { AppContext } from "../../contexts/AppContext";
+
 export default function adminpage() {
+  const { name } = useContext(AppContext);
   return (
     <div className="row m-5">
       <div className="col-12 col-sm-12 mt-5">
@@ -11,7 +14,7 @@ export default function adminpage() {
               role="tablist"
             >
               <li className="pt-2 px-3">
-                <h3 className="card-title">Username</h3>
+                <h3 className="card-title">{name}</h3>
               </li>
               <li className="nav-item">
                 <a

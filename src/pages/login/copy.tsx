@@ -1,5 +1,4 @@
 import { Col, Row } from "react-bootstrap";
-import "../../../public/css/login.css";
 
 export default function LoginPage() {
   const formStyle = {

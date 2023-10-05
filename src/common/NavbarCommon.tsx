@@ -3,7 +3,6 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { AppContext } from "../contexts/AppContext";
 import { PathEnum } from "../enum/path.enum";
 import logo from "../assets/images/logo_nisit.png";
-import "../../public/css/nav.css";
 
 export default function NavbarCommon() {
   const { pathUrl } = useContext(AppContext);

@@ -1,6 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import "../../../public/css/login.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { LoginRequest } from "../../models/request/auth/LoginRequestModel";
 import AuthService from "../../services/auth/auth_services";
 import { useNavigate } from "react-router-dom";
@@ -8,8 +7,12 @@ import { PermissionEnum } from "../../enum/permission.enum";
 import { PathEnum } from "../../enum/path.enum";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import decodeToken from "../../utils/decode";
+import { AppContext } from "../../contexts/AppContext";
+import { DecodeJwt } from "../../models/jwt/decode";
 
 export default function LoginPage() {
+  const { setEmail, setName, setBranch, setRole } = useContext(AppContext);
   const navigate = useNavigate();
   const [login, setLogin] = useState<LoginRequest>({
     email: "",
@@ -30,6 +33,11 @@ export default function LoginPage() {
         .then((res) => {
           if (res.data.status.code === "0000") {
             Cookies.set("token", res.data.data.access_token);
+            const decodeData = decodeToken(res.data.data.access_token);
+            setEmail(decodeData.email);
+            setName(decodeData.name);
+            setBranch(decodeData.branch);
+            setRole(decodeData.role);
             Swal.fire({
               icon: "success",
               title: "login success",

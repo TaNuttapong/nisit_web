@@ -2,7 +2,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import logonisit from "../assets/images/logo_nisit.png";
 import { Image } from "react-bootstrap";
-import "../../public/css/footer.css";
 import facebook from "../assets/icons/facebook (1).png";
 import line from "../assets/icons/line (1).png";
 import phone from "../assets/icons/phone-call.png";

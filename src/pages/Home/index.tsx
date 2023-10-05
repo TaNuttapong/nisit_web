@@ -1,7 +1,6 @@
 import CarouselCommon from "../../common/CarouselsCommon";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import "/public/css/homepage.css";
 
 export default function HomePage() {
   return (
