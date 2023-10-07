@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import decodeToken from "../../utils/decode";
 import { AppContext } from "../../contexts/AppContext";
 import { DecodeJwt } from "../../models/jwt/decode";
+import ContentLayout from "../../layouts/content";
 
 export default function LoginPage() {
   const { setEmail, setName, setBranch, setRole } = useContext(AppContext);
@@ -79,87 +80,97 @@ export default function LoginPage() {
   };
 
   return (
-    <Row>
-      <Col sm={10} md={6} className="mt-2">
-        <img
-          src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
-          className="img-responsive "
-          alt="Phone image"
-        />
-      </Col>
-      <Col sm={5} md={6} className="center mt-5 ">
-        <div className="card card-outline card-primary col-10 ">
-          <div className="card-header text-center">
-            <a href="/" className="h1">
-              <b>ADMIN</b>
-            </a>
-          </div>
-          <div className="card-body">
-            <p className="login-box-msg">Sign in to start your session</p>
-            <form
-              className="needs-validation"
-              noValidate
-              onSubmit={loginHandler}
-            >
-              <div className="input-group mb-3">
-                <input
-                  type="email"
-                  className={`form-control ${
-                    login.email === "" && formSubmitted ? "is-invalid" : ""
-                  }`}
-                  id="email"
-                  value={login.email}
-                  onChange={(e) =>
-                    setLogin({ ...login, email: e.target.value })
-                  }
-                  placeholder="Email"
-                  required
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-envelope" />
-                  </div>
+    <ContentLayout
+      content={
+        <>
+          <Row>
+            <Col sm={10} md={6} className="mt-2">
+              <img
+                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+                className="img-responsive "
+                alt="Phone image"
+              />
+            </Col>
+            <Col sm={5} md={6} className="center mt-5 ">
+              <div className="card card-outline card-primary col-10 ">
+                <div className="card-header text-center">
+                  <a href="/" className="h1">
+                    <b>ADMIN</b>
+                  </a>
                 </div>
-                {login.email === "" && formSubmitted && (
-                  <div className="invalid-feedback">Email</div>
-                )}
-              </div>
-              <div className="input-group mb-3">
-                <input
-                  type="password"
-                  className={`form-control ${
-                    login.password === "" && formSubmitted ? "is-invalid" : ""
-                  }`}
-                  id="password"
-                  value={login.password}
-                  onChange={(e) =>
-                    setLogin({ ...login, password: e.target.value })
-                  }
-                  placeholder="password"
-                  required
-                />
-                <div className="input-group-append">
-                  <div className="input-group-text">
-                    <span className="fas fa-lock" />
-                  </div>
+                <div className="card-body">
+                  <p className="login-box-msg">Sign in to start your session</p>
+                  <form
+                    className="needs-validation"
+                    noValidate
+                    onSubmit={loginHandler}
+                  >
+                    <div className="input-group mb-3">
+                      <input
+                        type="email"
+                        className={`form-control ${
+                          login.email === "" && formSubmitted
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="email"
+                        value={login.email}
+                        onChange={(e) =>
+                          setLogin({ ...login, email: e.target.value })
+                        }
+                        placeholder="Email"
+                        required
+                      />
+                      <div className="input-group-append">
+                        <div className="input-group-text">
+                          <span className="fas fa-envelope" />
+                        </div>
+                      </div>
+                      {login.email === "" && formSubmitted && (
+                        <div className="invalid-feedback">Email</div>
+                      )}
+                    </div>
+                    <div className="input-group mb-3">
+                      <input
+                        type="password"
+                        className={`form-control ${
+                          login.password === "" && formSubmitted
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        id="password"
+                        value={login.password}
+                        onChange={(e) =>
+                          setLogin({ ...login, password: e.target.value })
+                        }
+                        placeholder="password"
+                        required
+                      />
+                      <div className="input-group-append">
+                        <div className="input-group-text">
+                          <span className="fas fa-lock" />
+                        </div>
+                      </div>
+                      {login.password === "" && formSubmitted && (
+                        <div className="invalid-feedback">password</div>
+                      )}
+                    </div>
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="col-12">
+                          <button className="btn btn-primary" type="submit">
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-                {login.password === "" && formSubmitted && (
-                  <div className="invalid-feedback">password</div>
-                )}
               </div>
-              <div className="row">
-                <div className="col-12">
-                  <div className="col-12">
-                    <button className="btn btn-primary" type="submit">
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </Col>
-    </Row>
+            </Col>
+          </Row>
+        </>
+      }
+    />
   );
 }

@@ -3,9 +3,58 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { AppContext } from "../contexts/AppContext";
 import { PathEnum } from "../enum/path.enum";
 import logo from "../assets/images/logo_nisit.png";
+import AuthService from "../services/auth/auth_services";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function NavbarCommon() {
-  const { pathUrl } = useContext(AppContext);
+  const { pathUrl, role, setEmail, setName, setBranch, setRole } =
+    useContext(AppContext);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      const res = await AuthService.logoutService();
+
+      if (res.data.data) {
+        await Swal.fire({
+          icon: "success",
+          title: "Logout success",
+          confirmButtonText: "OK",
+          allowOutsideClick: true,
+        });
+
+        Cookies.remove("token");
+        setEmail("");
+        setName("");
+        setBranch("");
+        setRole("");
+        navigate(PathEnum.LOGIN);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text: "Logout failed! Please try again.",
+          showConfirmButton: false,
+          showDenyButton: true,
+          denyButtonText: "OK",
+          allowOutsideClick: true,
+        });
+      }
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Logout failed! Please try again.",
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText: "OK",
+        allowOutsideClick: true,
+      });
+    }
+  };
+
   return (
     <Navbar collapseOnSelect expand="lg" className=" bgnav ">
       <Container>
@@ -24,12 +73,18 @@ export default function NavbarCommon() {
               <h4>หน้าหลัก</h4>
             </Nav.Link>
             <Nav.Link
-              href={PathEnum.LOGIN}
               className={`nav-link ${
                 pathUrl === PathEnum.LOGIN ? "active" : ""
               }`}
             >
-              <h4>เข้าสู่ระบบ</h4>
+              <a
+                className="h4"
+                onClick={
+                  role === "" ? () => navigate(PathEnum.LOGIN) : handleLogout
+                }
+              >
+                {role === "" ? "เข้าสู่ระบบ" : "ออกจากระบบ"}
+              </a>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

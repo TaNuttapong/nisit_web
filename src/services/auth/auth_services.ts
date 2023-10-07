@@ -10,6 +10,11 @@ const AuthService = {
       payload
     );
   },
+  async logoutService() {
+    return InstanceHttps({ token: true }).get<ApiResponse<boolean>>(
+      "/apis/auth/logout"
+    );
+  },
 };
 
 export default AuthService;

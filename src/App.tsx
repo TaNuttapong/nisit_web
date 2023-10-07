@@ -9,7 +9,6 @@ import { PathEnum } from "./enum/path.enum";
 function App() {
   return (
     <>
-      <NavbarCommon />
       <BrowserRouter>
         <Routes>
           <>
