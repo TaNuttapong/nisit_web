@@ -1,9 +1,14 @@
 import { useContext } from "react";
 import { AppContext } from "../../contexts/AppContext";
-import ContentLayout from "../../layouts/content";
+import ContentLayout from "../../layouts/Content";
 
 export default function adminpage() {
   const { name } = useContext(AppContext);
+  // const [login, setLogin] = useState<LoginRequest>({
+  //   email: "",
+  //   password: "",
+  // });
+
   return (
     <ContentLayout
       content={
@@ -58,6 +63,19 @@ export default function adminpage() {
                         aria-selected="false"
                       >
                         เพิ่มข้อมูลนิสิต
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a
+                        className="nav-link"
+                        id="custom-tabs-one-settings-tab"
+                        data-toggle="pill"
+                        href="#custom-tabs-one-settings"
+                        role="tab"
+                        aria-controls="custom-tabs-one-settings"
+                        aria-selected="false"
+                      >
+                        addAccount
                       </a>
                     </li>
                   </ul>
@@ -327,6 +345,89 @@ export default function adminpage() {
                           </div>
                         </form>
                       </div>
+                    </div>
+                    <div
+                      className="tab-pane fade"
+                      id="custom-tabs-one-settings"
+                      role="tabpanel"
+                      aria-labelledby="custom-tabs-one-settings-tab"
+                    >
+                      {" "}
+                      <form>
+                        <div className="card-body">
+                          <div className="form-group">
+                            <label htmlFor="exampleInputPassword1">Name*</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="exampleInputPassword1"
+                              placeholder="Name"
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="exampleInputEmail1">Email*</label>
+                            <input
+                              type="email"
+                              className="form-control"
+                              id="exampleInputEmail1"
+                              placeholder="email"
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="exampleInputPassword1">
+                              Password*
+                            </label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              id="exampleInputPassword1"
+                              placeholder="Password"
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="exampleInputPassword1">
+                              Check Password*
+                            </label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              id="exampleInputPassword1"
+                              placeholder="Password"
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="exampleInputPassword1">
+                              branch*
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="exampleInputPassword1"
+                              placeholder="branch"
+                            />
+                          </div>
+
+                          <div className="form-check">
+                            <input
+                              type="checkbox"
+                              className="form-check-input"
+                              id="exampleCheck1"
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="exampleCheck1"
+                            >
+                              Check me out
+                            </label>
+                          </div>
+                        </div>
+
+                        <div className="card-footer">
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>

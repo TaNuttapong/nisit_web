@@ -9,8 +9,7 @@ import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import decodeToken from "../../utils/decode";
 import { AppContext } from "../../contexts/AppContext";
-import { DecodeJwt } from "../../models/jwt/decode";
-import ContentLayout from "../../layouts/content";
+import ContentLayout from "../../layouts/Content";
 
 export default function LoginPage() {
   const { setEmail, setName, setBranch, setRole } = useContext(AppContext);
