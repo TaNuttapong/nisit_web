@@ -48,6 +48,8 @@ export default function LoginPage() {
               if (result.isConfirmed) {
                 if (res.data.data.role === PermissionEnum.ADMIN) {
                   navigate(PathEnum.ADMIN_PAGE);
+                } else if (res.data.data.role === PermissionEnum.SUPER_ADMIN) {
+                  navigate(PathEnum.SUPER_ADMIN_PAGE);
                 } else {
                   navigate(PathEnum.USER_PAGE);
                 }

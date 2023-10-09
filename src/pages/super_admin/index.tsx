@@ -2,8 +2,8 @@ import { useContext } from "react";
 import { AppContext } from "../../contexts/AppContext";
 import ContentLayout from "../../layouts/Content";
 
-export default function AdminPage() {
-  const { name } = useContext(AppContext);
+export default function SuperAdminPage() {
+  const { name, email, branch, role } = useContext(AppContext);
 
   return (
     <ContentLayout
@@ -58,6 +58,19 @@ export default function AdminPage() {
                         aria-selected="false"
                       >
                         เพิ่มข้อมูลนิสิต
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a
+                        className="nav-link"
+                        id="custom-tabs-one-settings-tab"
+                        data-toggle="pill"
+                        href="#custom-tabs-one-settings"
+                        role="tab"
+                        aria-controls="custom-tabs-one-settings"
+                        aria-selected="false"
+                      >
+                        จัดการผู้ใช้
                       </a>
                     </li>
                   </ul>
@@ -325,6 +338,140 @@ export default function AdminPage() {
                             </button>
                           </div>
                         </form>
+                      </div>
+                    </div>
+                    <div
+                      className="tab-pane fade"
+                      id="custom-tabs-one-settings"
+                      role="tabpanel"
+                      aria-labelledby="custom-tabs-one-settings-tab"
+                    >
+                      <div className="card">
+                        <div className="card-header">
+                          <h3 className="card-title">
+                            Simple Full Width Table
+                          </h3>
+
+                          <div className="card-tools">
+                            <ul className="pagination pagination-sm float-right">
+                              <li>
+                                <a className="btn btn-primary btn-sm " href="#">
+                                  <i className="fas fa-plus"></i>
+                                  Add Account
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  &laquo;
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  1
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  2
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  3
+                                </a>
+                              </li>
+                              <li className="page-item">
+                                <a className="page-link" href="#">
+                                  &raquo;
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div className="card-body p-0">
+                          <table className="table">
+                            <thead>
+                              <tr>
+                                <th>ไอดี</th>
+                                <th>email</th>
+                                <th>name</th>
+                                <th>password</th>
+                                <th>branch</th>
+                                <th>role</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>1.</td>
+                                <td>{email}</td>
+                                <td>{name}</td>
+                                <td>password</td>
+                                <td>{branch}</td>
+                                <td>{role}</td>
+                                <td>
+                                  <a
+                                    className="btn btn-primary btn-sm"
+                                    href="#"
+                                  >
+                                    <i className="fas fa-folder"></i>
+                                    View
+                                  </a>
+                                </td>
+                                <td>
+                                  <a className="btn btn-info btn-sm" href="#">
+                                    <i className="fas fa-pencil-alt"></i>
+                                    Edit
+                                  </a>
+                                </td>
+                                <td>
+                                  <a className="btn btn-danger btn-sm" href="#">
+                                    <i className="fas fa-trash"></i>
+                                    Delete
+                                  </a>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>2.</td>
+                                <td>Clean database</td>
+                                <td>
+                                  <div className="progress progress-xs">
+                                    <div className="progress-bar bg-warning"></div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span className="badge bg-warning">70%</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>3.</td>
+                                <td>Cron job running</td>
+                                <td>
+                                  <div className="progress progress-xs progress-striped active">
+                                    <div className="progress-bar bg-primary"></div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span className="badge bg-primary">30%</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>4.</td>
+                                <td>Fix and squish bugs</td>
+                                <td>
+                                  <div className="progress progress-xs progress-striped active">
+                                    <div className="progress-bar bg-success"></div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <span className="badge bg-success">90%</span>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
                     </div>
                   </div>

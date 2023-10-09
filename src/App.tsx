@@ -4,6 +4,7 @@ import LoginPage from "./pages/login";
 import AdminPage from "./pages/admin";
 import FooterCommon from "./common/FooterCommon";
 import { PathEnum } from "./enum/path.enum";
+import SuperAdminPage from "./pages/super_admin";
 
 function App() {
   return (
@@ -14,6 +15,10 @@ function App() {
             <Route path={PathEnum.HOME} element={<HomePage />} />
             <Route path={PathEnum.LOGIN} element={<LoginPage />} />
             <Route path={PathEnum.ADMIN_PAGE} element={<AdminPage />} />
+            <Route
+              path={PathEnum.SUPER_ADMIN_PAGE}
+              element={<SuperAdminPage />}
+            />
           </>
         </Routes>
       </BrowserRouter>
