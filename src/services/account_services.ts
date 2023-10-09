@@ -14,9 +14,14 @@ const AccountService = {
     );
   },
   async listService() {
-    return InstanceHttps({ token: true }).get<ApiResponse<getAccountResponse>>(
-      "/apis/account/list"
-    );
+    return InstanceHttps({ token: true }).get<
+      ApiResponse<getAccountResponse[]>
+    >("/apis/account/list");
+  },
+  async editService() {
+    return InstanceHttps({ token: true }).get<
+      ApiResponse<getAccountResponse[]>
+    >("/apis/account/list");
   },
 };
 
