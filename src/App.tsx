@@ -5,6 +5,7 @@ import AdminPage from "./pages/admin";
 import FooterCommon from "./common/FooterCommon";
 import { PathEnum } from "./enum/path.enum";
 import SuperAdminPage from "./pages/super_admin";
+import AddAccountPage from "./pages/add_account";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               path={PathEnum.SUPER_ADMIN_PAGE}
               element={<SuperAdminPage />}
             />
+            <Route path={PathEnum.ADD_ACCOUNT} element={<AddAccountPage />} />
           </>
         </Routes>
       </BrowserRouter>

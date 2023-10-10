@@ -3,6 +3,8 @@ import { AppContext } from "../../contexts/AppContext";
 import ContentLayout from "../../layouts/Content";
 import AccountService from "../../services/account_services";
 import { getAccountResponse } from "../../models/responses/AccountResponseModel";
+import { PathEnum } from "../../enum/path.enum";
+import { Button, Modal } from "react-bootstrap";
 
 export default function SuperAdminPage() {
   const { name } = useContext(AppContext);
@@ -20,6 +22,10 @@ export default function SuperAdminPage() {
   useEffect(() => {
     getAccount();
   }, []);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   return (
     <ContentLayout
       content={
@@ -364,14 +370,96 @@ export default function SuperAdminPage() {
                       <div className="card">
                         <div className="card-header">
                           <h3 className="card-title">Account</h3>
-
                           <div className="card-tools">
                             <ul className="pagination pagination-sm float-right">
                               <li>
-                                <a className="btn btn-primary btn-sm " href="#">
+                                <Button variant="primary" onClick={handleShow}>
                                   <i className="fas fa-plus pr-1"></i>
                                   Add Account
-                                </a>
+                                </Button>
+                                <Modal
+                                  show={show}
+                                  onHide={handleClose}
+                                  backdrop="static"
+                                  keyboard={false}
+                                >
+                                  <Modal.Header closeButton>
+                                    <Modal.Title>Add Account</Modal.Title>
+                                  </Modal.Header>
+                                  <Modal.Body>
+                                    <form>
+                                      <div className="card-body">
+                                        <div className="form-group">
+                                          <label htmlFor="exampleInputEmail1">
+                                            Name*
+                                          </label>
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            id="exampleInputEmail1"
+                                            placeholder="Name"
+                                          />
+                                        </div>
+                                        <div className="form-group">
+                                          <label htmlFor="exampleInputEmail1">
+                                            branch*
+                                          </label>
+                                          <input
+                                            type="text"
+                                            className="form-control"
+                                            id="exampleInputEmail1"
+                                            placeholder="branch"
+                                          />
+                                        </div>
+                                        <div className="form-group">
+                                          <label htmlFor="exampleInputEmail1">
+                                            email*
+                                          </label>
+                                          <input
+                                            type="email"
+                                            className="form-control"
+                                            id="exampleInputEmail1"
+                                            placeholder="ชื่อโครงงาน"
+                                          />
+                                        </div>
+                                        <div className="form-group">
+                                          <label htmlFor="exampleInputPassword1">
+                                            password*
+                                          </label>
+                                          <input
+                                            type="password"
+                                            className="form-control"
+                                            id="exampleInputPassword1"
+                                            placeholder="password"
+                                          />
+                                        </div>
+                                        <div className="form-group">
+                                          <label htmlFor="exampleInputPassword1">
+                                            Check password*
+                                          </label>
+                                          <input
+                                            type="password"
+                                            className="form-control"
+                                            id="exampleInputPassword1"
+                                            placeholder="password"
+                                          />
+                                        </div>
+                                      </div>
+                                      <div className="card-footer"></div>
+                                    </form>
+                                  </Modal.Body>
+                                  <Modal.Footer>
+                                    <Button
+                                      variant="secondary"
+                                      onClick={handleClose}
+                                    >
+                                      Close
+                                    </Button>
+                                    <Button variant="primary">
+                                      Understood
+                                    </Button>
+                                  </Modal.Footer>
+                                </Modal>
                               </li>
                             </ul>
                           </div>

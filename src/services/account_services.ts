@@ -23,6 +23,11 @@ const AccountService = {
       ApiResponse<getAccountResponse[]>
     >("/apis/account/list");
   },
+  async deleteService() {
+    return InstanceHttps({ token: true }).delete<
+      ApiResponse<getAccountResponse[]>
+    >("/apis/account/list");
+  },
 };
 
 export default AccountService;
