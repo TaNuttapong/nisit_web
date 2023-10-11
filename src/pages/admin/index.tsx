@@ -175,7 +175,6 @@ export default function AdminPage() {
                             </label>
                           </div>
                         </div>
-
                         <div className="card-footer">
                           <button type="submit" className="btn btn-primary">
                             Submit

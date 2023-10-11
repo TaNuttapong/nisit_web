@@ -3,8 +3,6 @@ import { AppContext } from "../../contexts/AppContext";
 import ContentLayout from "../../layouts/Content";
 import AccountService from "../../services/account_services";
 import { getAccountResponse } from "../../models/responses/AccountResponseModel";
-import { PathEnum } from "../../enum/path.enum";
-import { Button, Modal } from "react-bootstrap";
 
 export default function SuperAdminPage() {
   const { name } = useContext(AppContext);
@@ -19,13 +17,14 @@ export default function SuperAdminPage() {
         console.log(err);
       });
   };
+  const modalShowAddAccount = () => {
+    ($("#addAccount") as any).modal("show");
+  };
+
   useEffect(() => {
     getAccount();
   }, []);
-  const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   return (
     <ContentLayout
       content={
@@ -373,93 +372,118 @@ export default function SuperAdminPage() {
                           <div className="card-tools">
                             <ul className="pagination pagination-sm float-right">
                               <li>
-                                <Button variant="primary" onClick={handleShow}>
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#addAccount"
+                                  onClick={modalShowAddAccount}
+                                >
                                   <i className="fas fa-plus pr-1"></i>
                                   Add Account
-                                </Button>
-                                <Modal
-                                  show={show}
-                                  onHide={handleClose}
-                                  backdrop="static"
-                                  keyboard={false}
+                                </button>
+                                <div
+                                  className="modal fade"
+                                  id="addAccount"
+                                  tabIndex={-1}
+                                  aria-labelledby="exampleModalLabel"
+                                  aria-hidden="true"
                                 >
-                                  <Modal.Header closeButton>
-                                    <Modal.Title>Add Account</Modal.Title>
-                                  </Modal.Header>
-                                  <Modal.Body>
-                                    <form>
-                                      <div className="card-body">
-                                        <div className="form-group">
-                                          <label htmlFor="exampleInputEmail1">
-                                            Name*
-                                          </label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            placeholder="Name"
-                                          />
-                                        </div>
-                                        <div className="form-group">
-                                          <label htmlFor="exampleInputEmail1">
-                                            branch*
-                                          </label>
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            placeholder="branch"
-                                          />
-                                        </div>
-                                        <div className="form-group">
-                                          <label htmlFor="exampleInputEmail1">
-                                            email*
-                                          </label>
-                                          <input
-                                            type="email"
-                                            className="form-control"
-                                            id="exampleInputEmail1"
-                                            placeholder="ชื่อโครงงาน"
-                                          />
-                                        </div>
-                                        <div className="form-group">
-                                          <label htmlFor="exampleInputPassword1">
-                                            password*
-                                          </label>
-                                          <input
-                                            type="password"
-                                            className="form-control"
-                                            id="exampleInputPassword1"
-                                            placeholder="password"
-                                          />
-                                        </div>
-                                        <div className="form-group">
-                                          <label htmlFor="exampleInputPassword1">
-                                            Check password*
-                                          </label>
-                                          <input
-                                            type="password"
-                                            className="form-control"
-                                            id="exampleInputPassword1"
-                                            placeholder="password"
-                                          />
-                                        </div>
+                                  <div className="modal-dialog">
+                                    <div className="modal-content">
+                                      <div className="modal-header">
+                                        <h5
+                                          className="modal-title"
+                                          id="exampleModalLabel"
+                                        >
+                                          Modal title
+                                        </h5>
+                                        <button
+                                          type="button"
+                                          className="btn-close"
+                                          data-bs-dismiss="modal"
+                                        ></button>
                                       </div>
-                                      <div className="card-footer"></div>
-                                    </form>
-                                  </Modal.Body>
-                                  <Modal.Footer>
-                                    <Button
-                                      variant="secondary"
-                                      onClick={handleClose}
-                                    >
-                                      Close
-                                    </Button>
-                                    <Button variant="primary">
-                                      Understood
-                                    </Button>
-                                  </Modal.Footer>
-                                </Modal>
+                                      <div className="modal-body">
+                                        <form>
+                                          <div className="card-body">
+                                            <div className="form-group">
+                                              <label htmlFor="exampleInputEmail1">
+                                                Name*
+                                              </label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputEmail1"
+                                                placeholder="Name"
+                                              />
+                                            </div>
+                                            <div className="form-group">
+                                              <label htmlFor="exampleInputEmail1">
+                                                branch*
+                                              </label>
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputEmail1"
+                                                placeholder="branch"
+                                              />
+                                            </div>
+                                            <div className="form-group">
+                                              <label htmlFor="exampleInputEmail1">
+                                                email*
+                                              </label>
+                                              <input
+                                                type="email"
+                                                className="form-control"
+                                                id="exampleInputEmail1"
+                                                placeholder="ชื่อโครงงาน"
+                                              />
+                                            </div>
+                                            <div className="form-group">
+                                              <label htmlFor="exampleInputPassword1">
+                                                password*
+                                              </label>
+                                              <input
+                                                type="password"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="password"
+                                              />
+                                            </div>
+                                            <div className="form-group">
+                                              <label htmlFor="exampleInputPassword1">
+                                                Check password*
+                                              </label>
+                                              <input
+                                                type="password"
+                                                className="form-control"
+                                                id="exampleInputPassword1"
+                                                placeholder="password"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="card-footer"></div>
+                                        </form>
+                                      </div>
+                                      <div className="modal-footer">
+                                        <button
+                                          type="button"
+                                          className="btn btn-secondary"
+                                          data-bs-dismiss="modal"
+                                        >
+                                          Close
+                                        </button>
+                                        <button
+                                          type="button"
+                                          className="btn btn-primary"
+                                        >
+                                          Save changes
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </li>
                             </ul>
                           </div>
@@ -496,10 +520,10 @@ export default function SuperAdminPage() {
                                     </a>
                                   </td>
                                   <td>
-                                    <a className="btn btn-info btn-sm" href="#">
+                                    <button>
                                       <i className="fas fa-pencil-alt"></i>
                                       Edit
-                                    </a>
+                                    </button>
                                   </td>
                                   <td>
                                     <a

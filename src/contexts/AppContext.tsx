@@ -1,4 +1,6 @@
-import { ReactNode, createContext, useMemo, useState } from "react";
+import { ReactNode, createContext, useEffect, useMemo, useState } from "react";
+import Cookies from "js-cookie";
+import { PathEnum } from "../enum/path.enum";
 
 interface AppContextProps {
   pathUrl: string;
@@ -12,6 +14,8 @@ interface AppContextProps {
   setBranch: (value: string) => void;
   role: string;
   setRole: (value: string) => void;
+  token: string;
+  setToken: (value: string) => void;
 }
 
 export const AppContext = createContext<AppContextProps>({
@@ -26,6 +30,8 @@ export const AppContext = createContext<AppContextProps>({
   setBranch: () => {},
   role: "",
   setRole: () => {},
+  token: "",
+  setToken: () => {},
 });
 
 interface ChildrenProps {
@@ -38,6 +44,19 @@ export function AppContextProvider({ children }: ChildrenProps) {
   const [name, setName] = useState<string>("");
   const [branch, setBranch] = useState<string>("");
   const [role, setRole] = useState<string>("");
+  const [token, setToken] = useState<string>(Cookies.get("token") ?? "");
+
+  useEffect(() => {
+    if (token === "" && pathUrl !== PathEnum.LOGIN) {
+      setEmail("");
+      setName("");
+      setBranch("");
+      setRole("");
+      if (pathUrl !== PathEnum.HOME) {
+        window.location.href = PathEnum.LOGIN;
+      }
+    }
+  }, []);
 
   const values = useMemo(
     () => ({
@@ -52,6 +71,8 @@ export function AppContextProvider({ children }: ChildrenProps) {
       setBranch,
       role,
       setRole,
+      token,
+      setToken,
     }),
     [
       pathUrl,
@@ -65,6 +86,8 @@ export function AppContextProvider({ children }: ChildrenProps) {
       setBranch,
       role,
       setRole,
+      token,
+      setToken,
     ]
   );
 

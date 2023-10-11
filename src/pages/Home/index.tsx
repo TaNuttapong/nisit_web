@@ -8,7 +8,6 @@ export default function HomePage() {
     <ContentLayout
       content={
         <>
-          {" "}
           <div>
             <Row className="bg">
               <Col md={4} className="d-none d-md-block"></Col>
