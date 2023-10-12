@@ -7,6 +7,7 @@ export interface getAccountResponse {
   createdAt: string;
   updatedAt: string;
 }
+
 export interface addAccountResponse {
   email: string;
   name: string;

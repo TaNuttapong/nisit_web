@@ -3,6 +3,8 @@ import { AppContext } from "../../contexts/AppContext";
 import ContentLayout from "../../layouts/Content";
 import AccountService from "../../services/account_services";
 import { getAccountResponse } from "../../models/responses/AccountResponseModel";
+import { AddAccountRequest } from "../../models/request/auth/addRequestModel";
+import Swal from "sweetalert2";
 
 export default function SuperAdminPage() {
   const { name } = useContext(AppContext);
@@ -17,8 +19,112 @@ export default function SuperAdminPage() {
         console.log(err);
       });
   };
+  const [addAccount, setAddAccount] = useState<AddAccountRequest>({
+    email: "",
+    password: "",
+    name: "",
+    branch: "",
+  });
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
+
+  const addAccountHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+    const data: AddAccountRequest = {
+      email: addAccount.email,
+      password: addAccount.password,
+      name: addAccount.name,
+      branch: addAccount.branch,
+    };
+    if (!e.currentTarget.checkValidity()) {
+      e.stopPropagation();
+    } else {
+      AccountService.addService(data)
+        .then((res) => {
+          if (res.data.status.code === "0000") {
+            Swal.fire({
+              icon: "success",
+              title: "success",
+              confirmButtonText: "OK",
+              allowOutsideClick: true,
+            }).then((result) => {
+              setFormSubmitted(false);
+              if (result.isConfirmed) {
+                getAccount();
+                ($("#addAccount") as any).modal("hide");
+                setAddAccount({
+                  email: "",
+                  password: "",
+                  name: "",
+                  branch: "",
+                });
+              }
+            });
+          }
+          console.log(res);
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "failed",
+            text: "AddAccount failed! Please try again.",
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: "OK",
+            allowOutsideClick: true,
+          });
+          console.log(err);
+        });
+    }
+  };
+  const deleteAccountHandler = (id: number) => {
+    const accountId = String(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        AccountService.deleteService(accountId)
+          .then((res) => {
+            if (res.data.status.code === "0000") {
+              Swal.fire({
+                icon: "success",
+                title: "success",
+                confirmButtonText: "OK",
+                allowOutsideClick: false,
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  getAccount();
+                }
+              });
+            }
+          })
+          .catch((err) => {
+            Swal.fire({
+              icon: "error",
+              title: "failed",
+              text: "Delete Account failed! Please try again.",
+              showConfirmButton: false,
+              showDenyButton: true,
+              denyButtonText: "OK",
+              allowOutsideClick: false,
+            });
+          });
+      }
+    });
+  };
+
   const modalShowAddAccount = () => {
     ($("#addAccount") as any).modal("show");
+  };
+
+  const modalShowEditAccount = () => {
+    ($("#editAccount") as any).modal("show");
   };
 
   useEffect(() => {
@@ -128,24 +234,19 @@ export default function SuperAdminPage() {
                             />
                           </div>
                           <div className="form-group">
-                            <label htmlFor="exampleInputFile">รูปภาพ*</label>
-                            <div className="input-group">
-                              <div className="custom-file">
-                                <input
-                                  type="file"
-                                  className="custom-file-input"
-                                  id="รูปภาพ"
-                                />
-                                <label
-                                  className="custom-file-label"
-                                  htmlFor="exampleInputFile"
-                                >
-                                  Choose file
-                                </label>
-                              </div>
-                              <div className="input-group-append">
-                                <span className="input-group-text">Upload</span>
-                              </div>
+                            <label htmlFor="customFile">รูปภาพ*</label>
+                            <div className="custom-file">
+                              <input
+                                type="file"
+                                className="custom-file-input"
+                                id="customFile"
+                              />
+                              <label
+                                className="custom-file-label"
+                                htmlFor="customFile"
+                              >
+                                Choose file
+                              </label>
                             </div>
                           </div>
                           <div className="form-group">
@@ -245,28 +346,19 @@ export default function SuperAdminPage() {
                               </select>
                             </div>
                             <div className="form-group">
-                              <label htmlFor="exampleInputFile">
-                                แนบไฟล์ PDF*
-                              </label>
-                              <div className="input-group">
-                                <div className="custom-file">
-                                  <input
-                                    type="file"
-                                    className="custom-file-input"
-                                    id="PDF"
-                                  />
-                                  <label
-                                    className="custom-file-label"
-                                    htmlFor="exampleInputFile"
-                                  >
-                                    Choose file
-                                  </label>
-                                </div>
-                                <div className="input-group-append">
-                                  <span className="input-group-text">
-                                    Upload
-                                  </span>
-                                </div>
+                              <label htmlFor="customFile">แนบไฟล์ PDF*</label>
+                              <div className="custom-file">
+                                <input
+                                  type="file"
+                                  className="custom-file-input"
+                                  id="customFile"
+                                />
+                                <label
+                                  className="custom-file-label"
+                                  htmlFor="customFile"
+                                >
+                                  Choose file
+                                </label>
                               </div>
                             </div>
                           </div>
@@ -327,28 +419,19 @@ export default function SuperAdminPage() {
                               </select>
                             </div>
                             <div className="form-group">
-                              <label htmlFor="exampleInputFile">
-                                แนบไฟล์ excel*
-                              </label>
-                              <div className="input-group">
-                                <div className="custom-file">
-                                  <input
-                                    type="file"
-                                    className="custom-file-input"
-                                    id="excel"
-                                  />
-                                  <label
-                                    className="custom-file-label"
-                                    htmlFor="exampleInputFile"
-                                  >
-                                    Choose file
-                                  </label>
-                                </div>
-                                <div className="input-group-append">
-                                  <span className="input-group-text">
-                                    Upload
-                                  </span>
-                                </div>
+                              <label htmlFor="customFile">แนบไฟล์ excel*</label>
+                              <div className="custom-file">
+                                <input
+                                  type="file"
+                                  className="custom-file-input"
+                                  id="customFile"
+                                />
+                                <label
+                                  className="custom-file-label"
+                                  htmlFor="customFile"
+                                >
+                                  Choose file
+                                </label>
                               </div>
                             </div>
                           </div>
@@ -396,16 +479,20 @@ export default function SuperAdminPage() {
                                           className="modal-title"
                                           id="exampleModalLabel"
                                         >
-                                          Modal title
+                                          Add Account
                                         </h5>
                                         <button
                                           type="button"
                                           className="btn-close"
-                                          data-bs-dismiss="modal"
+                                          data-dismiss="modal"
                                         ></button>
                                       </div>
                                       <div className="modal-body">
-                                        <form>
+                                        <form
+                                          className="needs-validation"
+                                          noValidate
+                                          onSubmit={addAccountHandler}
+                                        >
                                           <div className="card-body">
                                             <div className="form-group">
                                               <label htmlFor="exampleInputEmail1">
@@ -413,9 +500,22 @@ export default function SuperAdminPage() {
                                               </label>
                                               <input
                                                 type="text"
-                                                className="form-control"
-                                                id="exampleInputEmail1"
+                                                className={`form-control ${
+                                                  addAccount.name === "" &&
+                                                  formSubmitted
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                                id="name"
+                                                value={addAccount.name}
+                                                onChange={(e) =>
+                                                  setAddAccount({
+                                                    ...addAccount,
+                                                    name: e.target.value,
+                                                  })
+                                                }
                                                 placeholder="Name"
+                                                required
                                               />
                                             </div>
                                             <div className="form-group">
@@ -424,9 +524,22 @@ export default function SuperAdminPage() {
                                               </label>
                                               <input
                                                 type="text"
-                                                className="form-control"
-                                                id="exampleInputEmail1"
+                                                className={`form-control ${
+                                                  addAccount.branch === "" &&
+                                                  formSubmitted
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                                id="branch"
+                                                value={addAccount.branch}
+                                                onChange={(e) =>
+                                                  setAddAccount({
+                                                    ...addAccount,
+                                                    branch: e.target.value,
+                                                  })
+                                                }
                                                 placeholder="branch"
+                                                required
                                               />
                                             </div>
                                             <div className="form-group">
@@ -434,10 +547,23 @@ export default function SuperAdminPage() {
                                                 email*
                                               </label>
                                               <input
-                                                type="email"
-                                                className="form-control"
-                                                id="exampleInputEmail1"
-                                                placeholder="ชื่อโครงงาน"
+                                                type="text"
+                                                className={`form-control ${
+                                                  addAccount.email === "" &&
+                                                  formSubmitted
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                                id="email"
+                                                value={addAccount.email}
+                                                onChange={(e) =>
+                                                  setAddAccount({
+                                                    ...addAccount,
+                                                    email: e.target.value,
+                                                  })
+                                                }
+                                                placeholder="email"
+                                                required
                                               />
                                             </div>
                                             <div className="form-group">
@@ -446,40 +572,42 @@ export default function SuperAdminPage() {
                                               </label>
                                               <input
                                                 type="password"
-                                                className="form-control"
-                                                id="exampleInputPassword1"
+                                                className={`form-control ${
+                                                  addAccount.password === "" &&
+                                                  formSubmitted
+                                                    ? "is-invalid"
+                                                    : ""
+                                                }`}
+                                                id="password"
+                                                value={addAccount.password}
+                                                onChange={(e) =>
+                                                  setAddAccount({
+                                                    ...addAccount,
+                                                    password: e.target.value,
+                                                  })
+                                                }
                                                 placeholder="password"
-                                              />
-                                            </div>
-                                            <div className="form-group">
-                                              <label htmlFor="exampleInputPassword1">
-                                                Check password*
-                                              </label>
-                                              <input
-                                                type="password"
-                                                className="form-control"
-                                                id="exampleInputPassword1"
-                                                placeholder="password"
+                                                required
                                               />
                                             </div>
                                           </div>
                                           <div className="card-footer"></div>
+                                          <div className="modal-footer">
+                                            <button
+                                              type="button"
+                                              className="btn btn-secondary"
+                                              data-dismiss="modal"
+                                            >
+                                              Close
+                                            </button>
+                                            <button
+                                              type="submit"
+                                              className="btn btn-primary"
+                                            >
+                                              Save changes
+                                            </button>
+                                          </div>
                                         </form>
-                                      </div>
-                                      <div className="modal-footer">
-                                        <button
-                                          type="button"
-                                          className="btn btn-secondary"
-                                          data-bs-dismiss="modal"
-                                        >
-                                          Close
-                                        </button>
-                                        <button
-                                          type="button"
-                                          className="btn btn-primary"
-                                        >
-                                          Save changes
-                                        </button>
                                       </div>
                                     </div>
                                   </div>
@@ -511,28 +639,130 @@ export default function SuperAdminPage() {
                                   <td>{item.branch}</td>
                                   <td>{item.role}</td>
                                   <td>
-                                    <a
-                                      className="btn btn-primary btn-sm"
-                                      href="#"
+                                    <button
+                                      type="button"
+                                      className="btn btn-primary"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#editAccount"
+                                      onClick={modalShowEditAccount}
                                     >
-                                      <i className="fas fa-folder"></i>
-                                      View
-                                    </a>
-                                  </td>
-                                  <td>
-                                    <button>
-                                      <i className="fas fa-pencil-alt"></i>
+                                      <i className="fas fa-edit pr-1"></i>
                                       Edit
                                     </button>
+                                    <div
+                                      className="modal fade"
+                                      id="editAccount"
+                                      tabIndex={-1}
+                                      aria-labelledby="exampleModalLabel"
+                                      aria-hidden="true"
+                                    >
+                                      <div className="modal-dialog">
+                                        <div className="modal-content">
+                                          <div className="modal-header">
+                                            <h5
+                                              className="modal-title"
+                                              id="exampleModalLabel"
+                                            >
+                                              Edit Account
+                                            </h5>
+                                            <button
+                                              type="button"
+                                              className="btn-close"
+                                              data-dismiss="modal"
+                                            ></button>
+                                          </div>
+                                          <div className="modal-body">
+                                            <form>
+                                              <div className="card-body">
+                                                <div className="form-group">
+                                                  <label htmlFor="exampleInputEmail1">
+                                                    Name*
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="exampleInputEmail1"
+                                                    placeholder="Name"
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="exampleInputEmail1">
+                                                    branch*
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="exampleInputEmail1"
+                                                    placeholder="branch"
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="exampleInputEmail1">
+                                                    email*
+                                                  </label>
+                                                  <input
+                                                    type="email"
+                                                    className="form-control"
+                                                    id="exampleInputEmail1"
+                                                    placeholder="email"
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="exampleInputPassword1">
+                                                    password*
+                                                  </label>
+                                                  <input
+                                                    type="password"
+                                                    className="form-control"
+                                                    id="exampleInputPassword1"
+                                                    placeholder="password"
+                                                  />
+                                                </div>
+                                                <div className="form-group">
+                                                  <label htmlFor="exampleInputPassword1">
+                                                    Role
+                                                  </label>
+                                                  <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="exampleInputPassword1"
+                                                    placeholder="Role"
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div className="card-footer"></div>
+                                            </form>
+                                          </div>
+                                          <div className="modal-footer">
+                                            <button
+                                              type="button"
+                                              className="btn btn-secondary"
+                                              data-dismiss="modal"
+                                            >
+                                              Close
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="btn btn-primary"
+                                            >
+                                              Save changes
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </td>
                                   <td>
-                                    <a
-                                      className="btn btn-danger btn-sm"
-                                      href="#"
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={() =>
+                                        deleteAccountHandler(item.id)
+                                      }
                                     >
                                       <i className="fas fa-trash"></i>
                                       Delete
-                                    </a>
+                                    </button>
                                   </td>
                                 </tr>
                               ))}

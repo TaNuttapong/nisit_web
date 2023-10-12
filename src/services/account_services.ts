@@ -1,5 +1,6 @@
+import { UpdateAccountRequest } from "./../models/request/auth/addRequestModel";
 import InstanceHttps from "../clients";
-import { addRequest } from "../models/request/auth/addRequestModel";
+import { AddAccountRequest } from "../models/request/auth/addRequestModel";
 import {
   addAccountResponse,
   getAccountResponse,
@@ -7,7 +8,7 @@ import {
 import { ApiResponse } from "../models/responses/ApiResponse";
 
 const AccountService = {
-  async addService(payload: addRequest) {
+  async addService(payload: AddAccountRequest) {
     return InstanceHttps({ token: true }).post<ApiResponse<addAccountResponse>>(
       "/apis/account/add",
       payload
@@ -18,15 +19,15 @@ const AccountService = {
       ApiResponse<getAccountResponse[]>
     >("/apis/account/list");
   },
-  async editService() {
-    return InstanceHttps({ token: true }).get<
+  async updateAccountService(id: string, payload: UpdateAccountRequest) {
+    return InstanceHttps({ token: true }).put<
       ApiResponse<getAccountResponse[]>
-    >("/apis/account/list");
+    >(`/apis/account/update/${id}`, payload);
   },
-  async deleteService() {
-    return InstanceHttps({ token: true }).delete<
-      ApiResponse<getAccountResponse[]>
-    >("/apis/account/list");
+  async deleteService(id: string) {
+    return InstanceHttps({ token: true }).delete<ApiResponse<boolean>>(
+      `/apis/account/delete/${id}`
+    );
   },
 };
 
