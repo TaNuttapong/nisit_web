@@ -10,3 +10,6 @@ export interface UpdateAccountRequest {
   name: string;
   branch: string;
 }
+export interface UpdateIdRequest {
+  id: string;
+}

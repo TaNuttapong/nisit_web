@@ -20,9 +20,10 @@ const AccountService = {
     >("/apis/account/list");
   },
   async updateAccountService(id: string, payload: UpdateAccountRequest) {
-    return InstanceHttps({ token: true }).put<
-      ApiResponse<getAccountResponse[]>
-    >(`/apis/account/update/${id}`, payload);
+    return InstanceHttps({ token: true }).post<ApiResponse<string>>(
+      `/apis/account/update/${id}`,
+      payload
+    );
   },
   async deleteService(id: string) {
     return InstanceHttps({ token: true }).delete<ApiResponse<boolean>>(

@@ -2,8 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../contexts/AppContext";
 import ContentLayout from "../../layouts/Content";
 import AccountService from "../../services/account_services";
-import { getAccountResponse } from "../../models/responses/AccountResponseModel";
-import { AddAccountRequest } from "../../models/request/auth/addRequestModel";
+import {
+  addAccountResponse,
+  getAccountResponse,
+} from "../../models/responses/AccountResponseModel";
+import {
+  AddAccountRequest,
+  UpdateAccountRequest,
+  UpdateIdRequest,
+} from "../../models/request/auth/addRequestModel";
 import Swal from "sweetalert2";
 
 export default function SuperAdminPage() {
@@ -24,6 +31,15 @@ export default function SuperAdminPage() {
     password: "",
     name: "",
     branch: "",
+  });
+  const [updateAccount, setUpdateAccount] = useState<UpdateAccountRequest>({
+    email: "",
+    password: "",
+    name: "",
+    branch: "",
+  });
+  const [updateId, setUpdateId] = useState<UpdateIdRequest>({
+    id: "",
   });
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
@@ -119,11 +135,45 @@ export default function SuperAdminPage() {
     });
   };
 
+  const editAccountHandler = (id: number) => {
+    const accountId = String(id);
+    
+    const data: UpdateAccountRequest = {
+      email: updateAccount.email,
+      password: updateAccount.password,
+      name: updateAccount.name,
+      branch: updateAccount.branch,
+    };
+    AccountService.updateAccountService(accountId, data).then((res) => {
+      if (res.data.status.code === "0000") {
+        Swal.fire({
+          icon: "success",
+          title: "success",
+          confirmButtonText: "OK",
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            getAccount();
+            ($("#editAccount") as any).modal("hide");
+            setUpdateAccount({
+              email: "",
+              password: "",
+              name: "",
+              branch: "",
+            });
+          }
+        });
+      }
+    });
+  };
   const modalShowAddAccount = () => {
     ($("#addAccount") as any).modal("show");
   };
 
-  const modalShowEditAccount = () => {
+  const modalShowEditAccount = (
+    { name, email, password, branch }: addAccountResponse,
+    id: number
+  ) => {
     ($("#editAccount") as any).modal("show");
   };
 
@@ -681,8 +731,9 @@ export default function SuperAdminPage() {
                                                   <input
                                                     type="text"
                                                     className="form-control"
-                                                    id="exampleInputEmail1"
+                                                    id="name"
                                                     placeholder="Name"
+                                                    value={updateAccount.name}
                                                   />
                                                 </div>
                                                 <div className="form-group">
@@ -716,17 +767,6 @@ export default function SuperAdminPage() {
                                                     className="form-control"
                                                     id="exampleInputPassword1"
                                                     placeholder="password"
-                                                  />
-                                                </div>
-                                                <div className="form-group">
-                                                  <label htmlFor="exampleInputPassword1">
-                                                    Role
-                                                  </label>
-                                                  <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    id="exampleInputPassword1"
-                                                    placeholder="Role"
                                                   />
                                                 </div>
                                               </div>
