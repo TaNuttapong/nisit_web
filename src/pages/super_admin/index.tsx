@@ -9,7 +9,6 @@ import {
 import {
   AddAccountRequest,
   UpdateAccountRequest,
-  UpdateIdRequest,
 } from "../../models/request/auth/addRequestModel";
 import Swal from "sweetalert2";
 
@@ -34,13 +33,10 @@ export default function SuperAdminPage() {
   });
   const [updateAccount, setUpdateAccount] = useState<UpdateAccountRequest>({
     email: "",
-    password: "",
     name: "",
     branch: "",
   });
-  const [updateId, setUpdateId] = useState<UpdateIdRequest>({
-    id: "",
-  });
+  const [updateId, setUpdateId] = useState<number>(0);
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
 
   const addAccountHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -135,45 +131,68 @@ export default function SuperAdminPage() {
     });
   };
 
-  const editAccountHandler = (id: number) => {
-    const accountId = String(id);
-    
+  const editAccountHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+    const accountId = String(updateId);
+
     const data: UpdateAccountRequest = {
       email: updateAccount.email,
-      password: updateAccount.password,
       name: updateAccount.name,
       branch: updateAccount.branch,
     };
-    AccountService.updateAccountService(accountId, data).then((res) => {
-      if (res.data.status.code === "0000") {
-        Swal.fire({
-          icon: "success",
-          title: "success",
-          confirmButtonText: "OK",
-          allowOutsideClick: false,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            getAccount();
-            ($("#editAccount") as any).modal("hide");
-            setUpdateAccount({
-              email: "",
-              password: "",
-              name: "",
-              branch: "",
+    if (!e.currentTarget.checkValidity()) {
+      e.stopPropagation();
+    } else {
+      AccountService.updateAccountService(accountId, data).then((res) => {
+        if (res.data.status.code === "0000") {
+          Swal.fire({
+            icon: "success",
+            title: "success",
+            confirmButtonText: "OK",
+            allowOutsideClick: false,
+          })
+            .then((result) => {
+              if (result.isConfirmed) {
+                getAccount();
+                setFormSubmitted(false);
+                ($("#editAccount") as any).modal("hide");
+                setUpdateAccount({
+                  email: "",
+                  name: "",
+                  branch: "",
+                });
+              }
+            })
+            .catch((err) => {
+              Swal.fire({
+                icon: "error",
+                title: "failed",
+                text: "Update Account failed! Please try again.",
+                showConfirmButton: false,
+                showDenyButton: true,
+                denyButtonText: "OK",
+                allowOutsideClick: false,
+              });
             });
-          }
-        });
-      }
-    });
+        }
+      });
+    }
   };
   const modalShowAddAccount = () => {
     ($("#addAccount") as any).modal("show");
   };
 
   const modalShowEditAccount = (
-    { name, email, password, branch }: addAccountResponse,
+    { name, email, branch }: addAccountResponse,
     id: number
   ) => {
+    setUpdateId(id);
+    setUpdateAccount({
+      email: email,
+      name: name,
+      branch: branch,
+    });
     ($("#editAccount") as any).modal("show");
   };
 
@@ -344,19 +363,6 @@ export default function SuperAdminPage() {
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="form-check">
-                            <input
-                              type="checkbox"
-                              className="form-check-input"
-                              id="exampleCheck1"
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="exampleCheck1"
-                            >
-                              Check me out
-                            </label>
                           </div>
                         </div>
 
@@ -694,7 +700,16 @@ export default function SuperAdminPage() {
                                       className="btn btn-primary"
                                       data-bs-toggle="modal"
                                       data-bs-target="#editAccount"
-                                      onClick={modalShowEditAccount}
+                                      onClick={() =>
+                                        modalShowEditAccount(
+                                          {
+                                            email: item.email,
+                                            name: item.name,
+                                            branch: item.branch,
+                                          },
+                                          item.id
+                                        )
+                                      }
                                     >
                                       <i className="fas fa-edit pr-1"></i>
                                       Edit
@@ -722,7 +737,11 @@ export default function SuperAdminPage() {
                                             ></button>
                                           </div>
                                           <div className="modal-body">
-                                            <form>
+                                            <form
+                                              className="needs-validation"
+                                              noValidate
+                                              onSubmit={editAccountHandler}
+                                            >
                                               <div className="card-body">
                                                 <div className="form-group">
                                                   <label htmlFor="exampleInputEmail1">
@@ -730,10 +749,22 @@ export default function SuperAdminPage() {
                                                   </label>
                                                   <input
                                                     type="text"
-                                                    className="form-control"
+                                                    className={`form-control ${
+                                                      updateAccount.name ===
+                                                        "" && formSubmitted
+                                                        ? "is-invalid"
+                                                        : ""
+                                                    }`}
                                                     id="name"
-                                                    placeholder="Name"
                                                     value={updateAccount.name}
+                                                    onChange={(e) =>
+                                                      setUpdateAccount({
+                                                        ...updateAccount,
+                                                        name: e.target.value,
+                                                      })
+                                                    }
+                                                    placeholder="Name"
+                                                    required
                                                   />
                                                 </div>
                                                 <div className="form-group">
@@ -742,9 +773,22 @@ export default function SuperAdminPage() {
                                                   </label>
                                                   <input
                                                     type="text"
-                                                    className="form-control"
+                                                    className={`form-control ${
+                                                      updateAccount.branch ===
+                                                        "" && formSubmitted
+                                                        ? "is-invalid"
+                                                        : ""
+                                                    }`}
                                                     id="exampleInputEmail1"
                                                     placeholder="branch"
+                                                    value={updateAccount.branch}
+                                                    onChange={(e) =>
+                                                      setUpdateAccount({
+                                                        ...updateAccount,
+                                                        branch: e.target.value,
+                                                      })
+                                                    }
+                                                    required
                                                   />
                                                 </div>
                                                 <div className="form-group">
@@ -753,40 +797,42 @@ export default function SuperAdminPage() {
                                                   </label>
                                                   <input
                                                     type="email"
-                                                    className="form-control"
+                                                    className={`form-control ${
+                                                      updateAccount.email ===
+                                                        "" && formSubmitted
+                                                        ? "is-invalid"
+                                                        : ""
+                                                    }`}
                                                     id="exampleInputEmail1"
                                                     placeholder="email"
-                                                  />
-                                                </div>
-                                                <div className="form-group">
-                                                  <label htmlFor="exampleInputPassword1">
-                                                    password*
-                                                  </label>
-                                                  <input
-                                                    type="password"
-                                                    className="form-control"
-                                                    id="exampleInputPassword1"
-                                                    placeholder="password"
+                                                    value={updateAccount.email}
+                                                    onChange={(e) =>
+                                                      setUpdateAccount({
+                                                        ...updateAccount,
+                                                        email: e.target.value,
+                                                      })
+                                                    }
+                                                    required
                                                   />
                                                 </div>
                                               </div>
                                               <div className="card-footer"></div>
+                                              <div className="modal-footer">
+                                                <button
+                                                  type="button"
+                                                  className="btn btn-secondary"
+                                                  data-dismiss="modal"
+                                                >
+                                                  Close
+                                                </button>
+                                                <button
+                                                  type="submit"
+                                                  className="btn btn-primary"
+                                                >
+                                                  Save changes
+                                                </button>
+                                              </div>
                                             </form>
-                                          </div>
-                                          <div className="modal-footer">
-                                            <button
-                                              type="button"
-                                              className="btn btn-secondary"
-                                              data-dismiss="modal"
-                                            >
-                                              Close
-                                            </button>
-                                            <button
-                                              type="button"
-                                              className="btn btn-primary"
-                                            >
-                                              Save changes
-                                            </button>
                                           </div>
                                         </div>
                                       </div>

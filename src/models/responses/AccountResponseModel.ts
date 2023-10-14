@@ -12,5 +12,5 @@ export interface addAccountResponse {
   email: string;
   name: string;
   branch: string;
-  password: string;
+  password?: string;
 }

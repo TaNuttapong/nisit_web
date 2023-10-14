@@ -6,7 +6,6 @@ export interface AddAccountRequest {
 }
 export interface UpdateAccountRequest {
   email: string;
-  password: string;
   name: string;
   branch: string;
 }
