@@ -6,6 +6,8 @@ interface AppContextProps {
   pathUrl: string;
   setPathUrl: (pathUrl: string) => void;
   permission: string;
+  accountId: number;
+  setAccountId: (value: number) => void;
   email: string;
   setEmail: (value: string) => void;
   name: string;
@@ -22,6 +24,8 @@ export const AppContext = createContext<AppContextProps>({
   pathUrl: "",
   setPathUrl: () => {},
   permission: "",
+  accountId: 0,
+  setAccountId: () => {},
   email: "",
   setEmail: () => {},
   name: "",
@@ -40,6 +44,7 @@ interface ChildrenProps {
 export function AppContextProvider({ children }: ChildrenProps) {
   const [pathUrl, setPathUrl] = useState<string>(window.location.pathname);
   const permission = sessionStorage.getItem("permission") ?? "";
+  const [accountId, setAccountId] = useState<number>(0);
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [branch, setBranch] = useState<string>("");
@@ -52,6 +57,7 @@ export function AppContextProvider({ children }: ChildrenProps) {
       setName("");
       setBranch("");
       setRole("");
+      setAccountId(0);
       if (pathUrl !== PathEnum.HOME) {
         window.location.href = PathEnum.LOGIN;
       }
@@ -63,6 +69,8 @@ export function AppContextProvider({ children }: ChildrenProps) {
       pathUrl,
       setPathUrl,
       permission,
+      accountId,
+      setAccountId,
       email,
       setEmail,
       name,
@@ -78,6 +86,8 @@ export function AppContextProvider({ children }: ChildrenProps) {
       pathUrl,
       setPathUrl,
       permission,
+      accountId,
+      setAccountId,
       email,
       setEmail,
       name,

@@ -12,8 +12,13 @@ import {
 } from "../../models/request/auth/addRequestModel";
 import Swal from "sweetalert2";
 
+import ProjectService from "../../services/project_services";
+import decodeToken from "../../utils/decode";
+import Cookies from "js-cookie";
+import { AddProjectRequest } from "../../models/request/auth/projectRequestModel";
+
 export default function SuperAdminPage() {
-  const { name } = useContext(AppContext);
+  const { name, accountId } = useContext(AppContext);
   const [accountData, setAccountData] = useState<getAccountResponse[]>([]);
   const getAccount = async () => {
     await AccountService.listService()
@@ -38,7 +43,14 @@ export default function SuperAdminPage() {
   });
   const [updateId, setUpdateId] = useState<number>(0);
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
-
+  const [addProject, setAddProject] = useState<AddProjectRequest>({
+    project_name: "",
+    description: "",
+    image: "",
+    start_date: "",
+    end_date: "",
+    link: "",
+  });
   const addAccountHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -179,6 +191,59 @@ export default function SuperAdminPage() {
       });
     }
   };
+  const addProjectHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+    const data: AddProjectRequest = {
+      project_name: addProject.project_name,
+      description: addProject.description,
+      image: addProject.image,
+      start_date: addProject.start_date,
+      end_date: addProject.end_date,
+      link: addProject.link,
+      account_id: accountId,
+    };
+    if (!e.currentTarget.checkValidity()) {
+      e.stopPropagation();
+    } else {
+      ProjectService.addProjectService(data)
+        .then((res) => {
+          if (res.data.status.code === "0000") {
+            Swal.fire({
+              icon: "success",
+              title: "success",
+              confirmButtonText: "OK",
+              allowOutsideClick: true,
+            }).then((result) => {
+              setFormSubmitted(false);
+              if (result.isConfirmed) {
+                setAddProject({
+                  project_name: "",
+                  description: "",
+                  image: "",
+                  start_date: "",
+                  end_date: "",
+                  link: "",
+                });
+              }
+            });
+          }
+          console.log(res);
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "failed",
+            text: "AddAccount failed! Please try again.",
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: "OK",
+            allowOutsideClick: true,
+          });
+          console.log(err);
+        });
+    }
+  };
   const modalShowAddAccount = () => {
     ($("#addAccount") as any).modal("show");
   };
@@ -278,17 +343,33 @@ export default function SuperAdminPage() {
                       role="tabpanel"
                       aria-labelledby="custom-tabs-two-home-tab"
                     >
-                      <form>
+                      <form
+                        className="needs-validation"
+                        noValidate
+                        onSubmit={addProjectHandler}
+                      >
                         <div className="card-body">
                           <div className="form-group">
                             <label htmlFor="exampleInputEmail1">
                               ชื่อโครงงาน*
                             </label>
                             <input
-                              type="email"
-                              className="form-control"
-                              id="exampleInputEmail1"
+                              type="text"
+                              className={`form-control ${
+                                addProject.project_name === "" && formSubmitted
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              id="project_name"
+                              value={addProject.project_name}
+                              onChange={(e) =>
+                                setAddProject({
+                                  ...addProject,
+                                  project_name: e.target.value,
+                                })
+                              }
                               placeholder="ชื่อโครงงาน"
+                              required
                             />
                           </div>
                           <div className="form-group">
@@ -296,10 +377,43 @@ export default function SuperAdminPage() {
                               รายระเอียด*
                             </label>
                             <input
-                              type="password"
-                              className="form-control"
-                              id="exampleInputPassword1"
+                              type="text"
+                              className={`form-control ${
+                                addProject.description === "" && formSubmitted
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              id="description"
+                              value={addProject.description}
+                              onChange={(e) =>
+                                setAddProject({
+                                  ...addProject,
+                                  description: e.target.value,
+                                })
+                              }
                               placeholder="รายระเอียด"
+                              required
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="exampleInputPassword1">Link*</label>
+                            <input
+                              type="text"
+                              className={`form-control ${
+                                addProject.link === "" && formSubmitted
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              id="link"
+                              value={addProject.link}
+                              onChange={(e) =>
+                                setAddProject({
+                                  ...addProject,
+                                  link: e.target.value,
+                                })
+                              }
+                              placeholder="link"
+                              required
                             />
                           </div>
                           <div className="form-group">
@@ -307,61 +421,74 @@ export default function SuperAdminPage() {
                             <div className="custom-file">
                               <input
                                 type="file"
-                                className="custom-file-input"
-                                id="customFile"
+                                className={`form-control ${
+                                  addProject.image === "" && formSubmitted
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                id="image"
+                                value={addProject.image}
+                                onChange={(e) =>
+                                  setAddProject({
+                                    ...addProject,
+                                    image: e.target.value,
+                                  })
+                                }
+                                placeholder="รูปภาพ"
+                                required
                               />
-                              <label
-                                className="custom-file-label"
-                                htmlFor="customFile"
-                              >
-                                Choose file
-                              </label>
                             </div>
                           </div>
                           <div className="form-group">
-                            <label>Date:</label>
+                            <label>Date Start:</label>
                             <div
                               className="input-group date"
                               id="reservationdate"
-                              data-target-input="nearest"
                             >
                               <input
-                                type="text"
-                                className="form-control datetimepicker-input"
-                                data-target="#reservationdate"
+                                type="date"
+                                className={`form-control ${
+                                  addProject.start_date === "" && formSubmitted
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                id="start_date"
+                                value={addProject.start_date}
+                                onChange={(e) =>
+                                  setAddProject({
+                                    ...addProject,
+                                    start_date: e.target.value,
+                                  })
+                                }
+                                placeholder="Date Start"
+                                required
                               />
-                              <div
-                                className="input-group-append"
-                                data-target="#reservationdate"
-                                data-toggle="datetimepicker"
-                              >
-                                <div className="input-group-text">
-                                  <i className="fa fa-calendar"></i>
-                                </div>
-                              </div>
                             </div>
                           </div>
                           <div className="form-group">
                             <label>Date End:</label>
                             <div
                               className="input-group date"
-                              id="reservationdate2"
-                              data-target-input="nearest"
+                              id="reservationdate"
                             >
                               <input
-                                type="text"
-                                className="form-control datetimepicker-input"
-                                data-target="#reservationdate2"
+                                type="date"
+                                className={`form-control ${
+                                  addProject.end_date === "" && formSubmitted
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                id="end_date"
+                                value={addProject.end_date}
+                                onChange={(e) =>
+                                  setAddProject({
+                                    ...addProject,
+                                    end_date: e.target.value,
+                                  })
+                                }
+                                placeholder="Date End"
+                                required
                               />
-                              <div
-                                className="input-group-append"
-                                data-target="#reservationdate2"
-                                data-toggle="datetimepicker"
-                              >
-                                <div className="input-group-text">
-                                  <i className="fa fa-calendar"></i>
-                                </div>
-                              </div>
                             </div>
                           </div>
                         </div>

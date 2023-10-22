@@ -12,7 +12,8 @@ import { AppContext } from "../../contexts/AppContext";
 import ContentLayout from "../../layouts/Content";
 
 export default function LoginPage() {
-  const { setEmail, setName, setBranch, setRole } = useContext(AppContext);
+  const { setEmail, setName, setBranch, setRole, setAccountId } =
+    useContext(AppContext);
   const navigate = useNavigate();
   const [login, setLogin] = useState<LoginRequest>({
     email: "",
@@ -34,6 +35,7 @@ export default function LoginPage() {
           if (res.data.status.code === "0000") {
             Cookies.set("token", res.data.data.access_token);
             const decodeData = decodeToken(res.data.data.access_token);
+            setAccountId(decodeData.id);
             setEmail(decodeData.email);
             setName(decodeData.name);
             setBranch(decodeData.branch);
