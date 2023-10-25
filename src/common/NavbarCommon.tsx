@@ -63,14 +63,14 @@ export default function NavbarCommon() {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="ms-auto">
+          <Nav className="ms-auto color-h4">
             <Nav.Link
               href={PathEnum.HOME}
               className={`nav-link ${
                 pathUrl === PathEnum.HOME ? "active" : ""
               }`}
             >
-              <h4>หน้าหลัก</h4>
+              <h4 className="color-h4">หน้าหลัก</h4>
             </Nav.Link>
             <Nav.Link
               className={`nav-link ${
@@ -78,7 +78,7 @@ export default function NavbarCommon() {
               }`}
             >
               <a
-                className="h4"
+                className="color-h4 h4 text-decoration"
                 onClick={
                   role === "" ? () => navigate(PathEnum.LOGIN) : handleLogout
                 }

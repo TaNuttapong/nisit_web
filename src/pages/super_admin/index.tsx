@@ -535,6 +535,7 @@ export default function SuperAdminPage() {
                                   type="file"
                                   className="custom-file-input"
                                   id="customFile"
+                                  multiple
                                 />
                                 <label
                                   className="custom-file-label"
