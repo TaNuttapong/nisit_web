@@ -16,6 +16,8 @@ import ProjectService from "../../services/project_services";
 import decodeToken from "../../utils/decode";
 import Cookies from "js-cookie";
 import { AddProjectRequest } from "../../models/request/auth/projectRequestModel";
+import { AddNiSitExcelRequest } from "../../models/request/auth/nisitRequestModel";
+import NisitService from "../../services/nisit_servicers";
 
 export default function SuperAdminPage() {
   const { name, accountId } = useContext(AppContext);
@@ -50,6 +52,9 @@ export default function SuperAdminPage() {
     start_date: "",
     end_date: "",
     link: "",
+  });
+  const [addNisitExcel, setAddNisitExcel] = useState<AddNiSitExcelRequest>({
+    file: new File([], ""),
   });
   const addAccountHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -244,6 +249,48 @@ export default function SuperAdminPage() {
         });
     }
   };
+  const addNisitExcelHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+    const data: AddNiSitExcelRequest = {
+      file: addNisitExcel.file,
+    };
+    if (!e.currentTarget.checkValidity()) {
+      e.stopPropagation();
+    } else {
+      NisitService.addNiSitExcelService(data)
+        .then((res) => {
+          if (res.data.status.code === "0000") {
+            Swal.fire({
+              icon: "success",
+              title: "success",
+              confirmButtonText: "OK",
+              allowOutsideClick: true,
+            }).then((result) => {
+              setFormSubmitted(false);
+              if (result.isConfirmed) {
+                setAddNisitExcel({
+                  file: new File([], ""),
+                });
+              }
+            });
+          }
+          console.log(res);
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "failed",
+            text: "AddAccount failed! Please try again.",
+            showConfirmButton: false,
+            showDenyButton: true,
+            denyButtonText: "OK",
+            allowOutsideClick: true,
+          });
+          console.log(err);
+        });
+    }
+  };
   const modalShowAddAccount = () => {
     ($("#addAccount") as any).modal("show");
   };
@@ -261,6 +308,11 @@ export default function SuperAdminPage() {
     ($("#editAccount") as any).modal("show");
   };
 
+  const [select, setSelect] = useState<string>(""); // Initialize the select state
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelect(e.target.value); // Update the select state when the option is changed
+  };
   useEffect(() => {
     getAccount();
   }, []);
@@ -567,15 +619,21 @@ export default function SuperAdminPage() {
                         role="tabpanel"
                         aria-labelledby="custom-tabs-two-home-tab"
                       >
-                        <form>
+                        <form
+                          className="needs-validation"
+                          noValidate
+                          onSubmit={addNisitExcelHandler}
+                        >
                           <div className="card-body">
                             <div className="form-group">
-                              <label htmlFor="exampleInputEmail1">
+                              <label htmlFor="select">
                                 รูปแบบการเพิ่มข้อมูล*
                               </label>
                               <select
                                 className="form-control"
-                                id="exampleInputEmail1"
+                                id="select"
+                                value={select}
+                                onChange={handleSelectChange}
                               >
                                 <option value="">
                                   กรุณาเลือกรูปแบบการเพิ่มข้อมูล
@@ -583,41 +641,72 @@ export default function SuperAdminPage() {
                                 <option value="option2">
                                   เพิ่มข้อมูลด้วยไฟล์
                                 </option>
-                                <option value="option2">
+                                <option value="option3">
                                   เพิ่มข้อมูลรายบุคคล
                                 </option>
                               </select>
                             </div>
-                            <div className="form-group">
-                              <label htmlFor="exampleInputEmail1">
-                                ชื่อโครงงาน*
-                              </label>
-                              <select
-                                className="form-control"
-                                id="exampleInputEmail1"
-                              >
-                                <option value="">กรุณาเลือกชื่อโครงงาน</option>
-                                <option value="option1">ตัวเลือกที่ 1</option>
-                                <option value="option2">ตัวเลือกที่ 2</option>
-                                <option value="option3">ตัวเลือกที่ 3</option>
-                              </select>
-                            </div>
-                            <div className="form-group">
-                              <label htmlFor="customFile">แนบไฟล์ excel*</label>
-                              <div className="custom-file">
-                                <input
-                                  type="file"
-                                  className="custom-file-input"
-                                  id="customFile"
-                                />
-                                <label
-                                  className="custom-file-label"
-                                  htmlFor="customFile"
-                                >
-                                  Choose file
+                            {select === "option2" && (
+                              <div className="form-group">
+                                <label htmlFor="customFile">
+                                  แนบไฟล์ excel*
                                 </label>
+                                <div className="custom-file">
+                                  <input
+                                    type="file"
+                                    className={`form-control ${
+                                      addNisitExcel.file === null &&
+                                      formSubmitted
+                                        ? "is-invalid"
+                                        : ""
+                                    }`}
+                                    id="file"
+                                    onChange={(e) =>
+                                      setAddNisitExcel({
+                                        ...addNisitExcel,
+                                        file:
+                                          e.target.files?.[0] ??
+                                          addNisitExcel.file,
+                                      })
+                                    }
+                                    placeholder="แนบไฟล์ excel*"
+                                    required
+                                  />
+                                </div>
                               </div>
-                            </div>
+                            )}
+                            {select === "option3" && (
+                              <div className="form-group">
+                                <label htmlFor="name">ชื่อ*</label>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  id="name"
+                                  name="name"
+                                  placeholder="กรอกชื่อ"
+                                />
+                                <div className="form-group">
+                                  <label htmlFor="nisit_id">รหัสนิสิต*</label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id="nisit_id"
+                                    name="nisit_id"
+                                    placeholder="กรอกรหัสนิสิต"
+                                  />
+                                </div>
+                                <div className="form-group">
+                                  <label htmlFor="class">ระดับชั้น*</label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    id="class"
+                                    name="class"
+                                    placeholder="กรอกระดับชั้น"
+                                  />
+                                </div>
+                              </div>
+                            )}
                           </div>
                           <div className="card-footer">
                             <button type="submit" className="btn btn-primary">
