@@ -3,12 +3,13 @@ import Cookies from "js-cookie";
 
 interface OptionInstance {
   token?: boolean;
+  multipart?: boolean;
 }
 
-function InstanceHttps({ token }: OptionInstance): AxiosInstance {
+function InstanceHttps({ token, multipart }: OptionInstance): AxiosInstance {
   const getToken = Cookies.get("token") ?? "";
   const headers: Record<string, string> = {
-    "Content-type": "application/json",
+    "Content-type": multipart ? "multipart/form-data" : "application/json",
   };
 
   if (token) {
