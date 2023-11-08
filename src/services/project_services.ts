@@ -1,7 +1,11 @@
 import InstanceHttps from "../clients";
 import { AddProjectRequest } from "../models/request/auth/projectRequestModel";
+
 import { ApiResponse } from "../models/responses/ApiResponse";
-import { AddProjectResponse } from "../models/responses/ProjectResponseModel";
+import {
+  AddProjectResponse,
+  getProjectResponse,
+} from "../models/responses/ProjectResponseModel";
 
 const ProjectService = {
   async addProjectService(payload: AddProjectRequest) {
@@ -9,6 +13,11 @@ const ProjectService = {
       "/apis/project/add",
       payload
     );
+  },
+  async listProjectService() {
+    return InstanceHttps({ token: true }).get<
+      ApiResponse<getProjectResponse[]>
+    >("/apis/project/list");
   },
 };
 

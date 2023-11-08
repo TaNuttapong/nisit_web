@@ -1,9 +1,27 @@
 import CarouselCommon from "../../common/CarouselsCommon";
+import { Image } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ContentLayout from "../../layouts/Content";
-
+import testpng from "../../assets/images/picc_1.png";
+import { getProjectResponse } from "../../models/responses/ProjectResponseModel";
+import { useEffect, useState } from "react";
+import ProjectService from "../../services/project_services";
 export default function HomePage() {
+  const [projectData, setProjectData] = useState<getProjectResponse[]>([]);
+  const getProject = async () => {
+    await ProjectService.listProjectService()
+      .then((res) => {
+        setProjectData(res.data.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    getProject();
+  }, []);
   return (
     <ContentLayout
       content={
@@ -37,6 +55,17 @@ export default function HomePage() {
                 <h1 className="padding">โครงการทั้งหมด</h1>
               </Col>
             </Row>
+            {projectData.map((item) => (
+              <Row md={4}>
+                <Col xs={2} className="text-center">
+                  <Image src={item.image} alt="pro" className="h-100 w-80 " />
+                </Col>
+                <Col>
+                  <h1>{item.project_name}</h1>
+                  <h2>{item.description}</h2>
+                </Col>
+              </Row>
+            ))}
           </div>
         </>
       }

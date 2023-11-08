@@ -13,19 +13,17 @@ import {
 import Swal from "sweetalert2";
 
 import ProjectService from "../../services/project_services";
-import decodeToken from "../../utils/decode";
-import Cookies from "js-cookie";
+
 import { AddProjectRequest } from "../../models/request/auth/projectRequestModel";
-import {
-  AddNiSitExcelRequest,
-  AddNiSitRequest,
-} from "../../models/request/auth/nisitRequestModel";
+import { AddNiSitRequest } from "../../models/request/auth/nisitRequestModel";
 import NisitService from "../../services/nisit_servicers";
+import { getProjectResponse } from "../../models/responses/ProjectResponseModel";
 
 export default function SuperAdminPage() {
   const { name, accountId } = useContext(AppContext);
   const [select, setSelect] = useState<string>("");
   const [accountData, setAccountData] = useState<getAccountResponse[]>([]);
+  const [projectData, setProjectData] = useState<getProjectResponse[]>([]);
   const [addAccount, setAddAccount] = useState<AddAccountRequest>({
     email: "",
     password: "",
@@ -203,6 +201,16 @@ export default function SuperAdminPage() {
       });
     }
   };
+  const getProject = async () => {
+    await ProjectService.listProjectService()
+      .then((res) => {
+        setProjectData(res.data.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const addProjectHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -377,6 +385,7 @@ export default function SuperAdminPage() {
   };
   useEffect(() => {
     getAccount();
+    getProject();
   }, []);
 
   return (
