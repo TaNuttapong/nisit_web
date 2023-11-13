@@ -5,14 +5,14 @@ import { AddNisitExcelResponse } from "../models/responses/NisitExcelResponseMod
 import { AddNisitResponse } from "../models/responses/NisitResponseModel";
 
 const NisitService = {
-  async addNiSitExcelService(payload: any) {
+  async addNiSitExcelService(payload: any, project_id: string) {
     return InstanceHttps({ token: true, multipart: true }).post<
       ApiResponse<AddNisitExcelResponse>
-    >("/apis/nisit/excel/add", payload);
+    >(`/apis/nisit/excel/add?project_id=${project_id}`, payload);
   },
-  async addNiSitService(payload: AddNiSitRequest) {
+  async addNiSitService(payload: AddNiSitRequest, project_id: string) {
     return InstanceHttps({ token: true }).post<ApiResponse<AddNisitResponse>>(
-      "/apis/nisit/add",
+      `/apis/nisit/add?project_id=${project_id}`,
       payload
     );
   },

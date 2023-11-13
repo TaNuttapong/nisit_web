@@ -3,12 +3,13 @@ import { Image } from "react-bootstrap";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ContentLayout from "../../layouts/Content";
-import testpng from "../../assets/images/picc_1.png";
 import { getProjectResponse } from "../../models/responses/ProjectResponseModel";
 import { useEffect, useState } from "react";
 import ProjectService from "../../services/project_services";
+
 export default function HomePage() {
   const [projectData, setProjectData] = useState<getProjectResponse[]>([]);
+
   const getProject = async () => {
     await ProjectService.listProjectService()
       .then((res) => {
@@ -19,9 +20,11 @@ export default function HomePage() {
         console.log(err);
       });
   };
+
   useEffect(() => {
     getProject();
   }, []);
+
   return (
     <ContentLayout
       content={
@@ -63,6 +66,9 @@ export default function HomePage() {
                 <Col>
                   <h1>{item.project_name}</h1>
                   <h2>{item.description}</h2>
+                  <a href={`https://${item.link}`} target="_blank">
+                    test
+                  </a>
                 </Col>
               </Row>
             ))}

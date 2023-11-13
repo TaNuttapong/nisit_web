@@ -11,17 +11,17 @@ import {
   UpdateAccountRequest,
 } from "../../models/request/auth/addRequestModel";
 import Swal from "sweetalert2";
-
 import ProjectService from "../../services/project_services";
-
 import { AddProjectRequest } from "../../models/request/auth/projectRequestModel";
 import { AddNiSitRequest } from "../../models/request/auth/nisitRequestModel";
 import NisitService from "../../services/nisit_servicers";
 import { getProjectResponse } from "../../models/responses/ProjectResponseModel";
+import imagesFirebase from "../../utils/imageFirebase";
 
 export default function SuperAdminPage() {
   const { name, accountId } = useContext(AppContext);
   const [select, setSelect] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [accountData, setAccountData] = useState<getAccountResponse[]>([]);
   const [projectData, setProjectData] = useState<getProjectResponse[]>([]);
   const [addAccount, setAddAccount] = useState<AddAccountRequest>({
@@ -46,6 +46,7 @@ export default function SuperAdminPage() {
     link: "",
   });
   const [addNisit, setAddNisit] = useState<AddNiSitRequest>({
+    project_id: "",
     name: "",
     student_id: "",
     classStudent: "",
@@ -211,9 +212,20 @@ export default function SuperAdminPage() {
         console.log(err);
       });
   };
-  const addProjectHandler = (e: React.FormEvent<HTMLFormElement>) => {
+
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = e.target.files;
+
+  //   if (files && files.length > 0) {
+  //     const file = files[0];
+  //     setSelectedFile(file);
+  //   }
+  // };
+
+  const addProjectHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormSubmitted(true);
+
     const data: AddProjectRequest = {
       project_name: addProject.project_name,
       description: addProject.description,
@@ -223,9 +235,19 @@ export default function SuperAdminPage() {
       link: addProject.link,
       account_id: accountId,
     };
+
     if (!e.currentTarget.checkValidity()) {
       e.stopPropagation();
     } else {
+      // if (selectedFile) {
+      //   try {
+      //     const imageUrl = await imagesFirebase.handleFileUpload(selectedFile);
+      //     data.image = imageUrl;
+      //   } catch (error) {
+      //     console.error("Error uploading file:", error);
+      //   }
+      // }
+
       ProjectService.addProjectService(data)
         .then((res) => {
           if (res.data.status.code === "0000") {
@@ -287,9 +309,10 @@ export default function SuperAdminPage() {
         });
       } else {
         setAddNisitExcel("test");
+        console.log(addNisit.project_id);
         const formData = new FormData();
         formData.append("file", selectedFile, selectedFile.name);
-        NisitService.addNiSitExcelService(formData)
+        NisitService.addNiSitExcelService(formData, addNisit.project_id)
           .then((res) => {
             if (res.data.status.code === "0000") {
               Swal.fire({
@@ -320,6 +343,7 @@ export default function SuperAdminPage() {
       }
     } else if (select === "option3") {
       const data: AddNiSitRequest = {
+        project_id: addNisit.project_id,
         student_id: addNisit.student_id,
         name: addNisit.name,
         classStudent: addNisit.classStudent,
@@ -327,7 +351,7 @@ export default function SuperAdminPage() {
       if (!e.currentTarget.checkValidity()) {
         e.stopPropagation();
       } else {
-        NisitService.addNiSitService(data)
+        NisitService.addNiSitService(data, addNisit.project_id)
           .then((res) => {
             if (res.data.status.code === "0000") {
               Swal.fire({
@@ -339,6 +363,7 @@ export default function SuperAdminPage() {
                 setFormSubmitted(false);
                 if (result.isConfirmed) {
                   setAddNisit({
+                    project_id: "",
                     student_id: "",
                     name: "",
                     classStudent: "",
@@ -540,10 +565,17 @@ export default function SuperAdminPage() {
                             />
                           </div>
                           <div className="form-group">
-                            <label htmlFor="customFile">รูปภาพ*</label>
+                            <label htmlFor="customFile">URL รูปภาพ*</label>
+                            <br />
+                            <a
+                              href="https://pic.in.th/?lang=th"
+                              target="_blank"
+                            >
+                              เว็ปแปลงไฟล์เป็นURL*
+                            </a>
                             <div className="custom-file">
                               <input
-                                type="file"
+                                type="text"
                                 className={`form-control ${
                                   addProject.image === "" && formSubmitted
                                     ? "is-invalid"
@@ -557,7 +589,7 @@ export default function SuperAdminPage() {
                                     image: e.target.value,
                                   })
                                 }
-                                placeholder="รูปภาพ"
+                                placeholder="URL รูปภาพ*"
                                 required
                               />
                             </div>
@@ -638,34 +670,49 @@ export default function SuperAdminPage() {
                         <form>
                           <div className="card-body">
                             <div className="form-group">
-                              <label htmlFor="exampleInputEmail1">
-                                ชื่อโครงงาน*
+                              <label htmlFor="customFile">
+                                โครงการที่ต้องการเพิ่มข้อมูล*
                               </label>
                               <select
-                                className="form-control"
-                                id="exampleInputEmail1"
+                                className={`form-control  ${
+                                  addNisit.project_id === "" && formSubmitted
+                                    ? "is-invalid"
+                                    : ""
+                                }`}
+                                id="project_id"
+                                onChange={(e) =>
+                                  setAddNisit({
+                                    ...addNisit,
+                                    project_id: String(e.target.value),
+                                  })
+                                }
+                                placeholder="เลือกโครงการ"
+                                required
                               >
-                                <option value="">กรุณาเลือกชื่อโครงงาน</option>
-                                <option value="option1">ตัวเลือกที่ 1</option>
-                                <option value="option2">ตัวเลือกที่ 2</option>
-                                <option value="option3">ตัวเลือกที่ 3</option>
+                                <option selected hidden value={0}>
+                                  เลือกโครงการ
+                                </option>
+                                {projectData.map((item) => (
+                                  <option value={item.id}>
+                                    {item.project_name}
+                                  </option>
+                                ))}
                               </select>
                             </div>
                             <div className="form-group">
                               <label htmlFor="customFile">แนบไฟล์ PDF*</label>
                               <div className="custom-file">
-                                <input
+                                {/* <input
                                   type="file"
-                                  className="custom-file-input"
-                                  id="customFile"
-                                  multiple
-                                />
-                                <label
-                                  className="custom-file-label"
-                                  htmlFor="customFile"
-                                >
-                                  Choose file
-                                </label>
+                                  className={`form-control ${
+                                    addCertificate.file === "" && formSubmitted
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  id=""
+                                  placeholder="แนบไฟล์ PDF*"
+                                  required
+                                /> */}
                               </div>
                             </div>
                           </div>
@@ -706,7 +753,7 @@ export default function SuperAdminPage() {
                                 value={select}
                                 onChange={handleSelectChange}
                               >
-                                <option value="">
+                                <option selected hidden value="">
                                   กรุณาเลือกรูปแบบการเพิ่มข้อมูล
                                 </option>
                                 <option value="option2">
@@ -718,7 +765,35 @@ export default function SuperAdminPage() {
                               </select>
                             </div>
                             {select === "option2" && (
-                              <div className="form-group">
+                              <div className="form-group mb-10">
+                                <label htmlFor="customFile">
+                                  โครงการที่ต้องการเพิ่มข้อมูล*
+                                </label>
+                                <select
+                                  className={`form-control  ${
+                                    addNisit.project_id === "" && formSubmitted
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  id="project_id"
+                                  onChange={(e) =>
+                                    setAddNisit({
+                                      ...addNisit,
+                                      project_id: String(e.target.value),
+                                    })
+                                  }
+                                  placeholder="เลือกโครงการ"
+                                  required
+                                >
+                                  <option selected hidden value={0}>
+                                    เลือกโครงการ
+                                  </option>
+                                  {projectData.map((item) => (
+                                    <option value={item.id}>
+                                      {item.project_name}
+                                    </option>
+                                  ))}
+                                </select>
                                 <label htmlFor="customFile">
                                   แนบไฟล์ excel*
                                 </label>
@@ -739,6 +814,34 @@ export default function SuperAdminPage() {
                             )}
                             {select === "option3" && (
                               <div className="form-group">
+                                <label htmlFor="customFile">
+                                  โครงการที่ต้องการเพิ่มข้อมูล*
+                                </label>
+                                <select
+                                  className={`form-control  ${
+                                    addNisit.project_id === "" && formSubmitted
+                                      ? "is-invalid"
+                                      : ""
+                                  }`}
+                                  id="project_id"
+                                  onChange={(e) =>
+                                    setAddNisit({
+                                      ...addNisit,
+                                      project_id: String(e.target.value),
+                                    })
+                                  }
+                                  placeholder="เลือกโครงการ"
+                                  required
+                                >
+                                  <option selected hidden value={0}>
+                                    เลือกโครงการ
+                                  </option>
+                                  {projectData.map((item) => (
+                                    <option value={item.id}>
+                                      {item.project_name}
+                                    </option>
+                                  ))}
+                                </select>
                                 <label htmlFor="name">ชื่อ*</label>
                                 <input
                                   type="text"
@@ -781,7 +884,7 @@ export default function SuperAdminPage() {
                                   />
                                 </div>
                                 <div className="form-group">
-                                  <label htmlFor="class">ระดับชั้น*</label>
+                                  <label htmlFor="class">สาขา*</label>
                                   <input
                                     type="text"
                                     className={`form-control ${

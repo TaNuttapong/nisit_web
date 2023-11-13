@@ -9,6 +9,7 @@ export interface AddProjectResponse {
 }
 
 export interface getProjectResponse {
+  id: number;
   project_name: string;
   description: string;
   image: string;
