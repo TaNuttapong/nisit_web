@@ -10,3 +10,8 @@
 .w-80 {
   width: 80%;
 }
+.imgtest {
+  width: 50%;
+  height: auto;
+  border-radius: 2%;
+}
