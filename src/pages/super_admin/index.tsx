@@ -16,7 +16,7 @@ import { AddProjectRequest } from "../../models/request/auth/projectRequestModel
 import { AddNiSitRequest } from "../../models/request/auth/nisitRequestModel";
 import NisitService from "../../services/nisit_servicers";
 import { getProjectResponse } from "../../models/responses/ProjectResponseModel";
-import imagesFirebase from "../../utils/imageFirebase";
+import folder from "../../utils/folder";
 
 export default function SuperAdminPage() {
   const { name, accountId } = useContext(AppContext);
@@ -213,14 +213,14 @@ export default function SuperAdminPage() {
       });
   };
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = e.target.files;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
 
-  //   if (files && files.length > 0) {
-  //     const file = files[0];
-  //     setSelectedFile(file);
-  //   }
-  // };
+    if (files && files.length > 0) {
+      const file = files[0];
+      setSelectedFile(file);
+    }
+  };
 
   const addProjectHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -239,51 +239,67 @@ export default function SuperAdminPage() {
     if (!e.currentTarget.checkValidity()) {
       e.stopPropagation();
     } else {
-      // if (selectedFile) {
-      //   try {
-      //     const imageUrl = await imagesFirebase.handleFileUpload(selectedFile);
-      //     data.image = imageUrl;
-      //   } catch (error) {
-      //     console.error("Error uploading file:", error);
-      //   }
-      // }
+      if (selectedFile) {
+        const folderPath = await folder.createUniqueFolder();
+        const imageName = selectedFile.name;
 
-      ProjectService.addProjectService(data)
-        .then((res) => {
-          if (res.data.status.code === "0000") {
-            Swal.fire({
-              icon: "success",
-              title: "success",
-              confirmButtonText: "OK",
-              allowOutsideClick: true,
-            }).then((result) => {
-              setFormSubmitted(false);
-              if (result.isConfirmed) {
-                setAddProject({
-                  project_name: "",
-                  description: "",
-                  image: "",
-                  start_date: "",
-                  end_date: "",
-                  link: "",
-                });
-              }
-            });
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(selectedFile);
+
+        reader.onload = async () => {
+          const arrayBuffer = reader.result as ArrayBuffer;
+          const imageData = new Uint8Array(arrayBuffer);
+
+          try {
+            const savedImagePath = await folder.saveImageToFolder(
+              folderPath,
+              imageName,
+              imageData
+            );
+
+            data.image = savedImagePath;
+          } catch (error) {
+            console.error("Error saving image:", error);
           }
-          console.log(res);
-        })
-        .catch((err) => {
-          Swal.fire({
-            icon: "error",
-            title: "failed",
-            text: "AddAccount failed! Please try again.",
-            showConfirmButton: false,
-            showDenyButton: true,
-            denyButtonText: "OK",
-            allowOutsideClick: true,
+        };
+
+        ProjectService.addProjectService(data)
+          .then((res) => {
+            if (res.data.status.code === "0000") {
+              Swal.fire({
+                icon: "success",
+                title: "success",
+                confirmButtonText: "OK",
+                allowOutsideClick: true,
+              }).then((result) => {
+                setFormSubmitted(false);
+                if (result.isConfirmed) {
+                  setAddProject({
+                    project_name: "",
+                    description: "",
+                    image: "",
+                    start_date: "",
+                    end_date: "",
+                    link: "",
+                  });
+                }
+              });
+            }
+            console.log(res);
+          })
+          .catch((err) => {
+            Swal.fire({
+              icon: "error",
+              title: "failed",
+              text: "AddAccount failed! Please try again.",
+              showConfirmButton: false,
+              showDenyButton: true,
+              denyButtonText: "OK",
+              allowOutsideClick: true,
+            });
+            console.log(err);
           });
-          console.log(err);
-        });
+      }
     }
   };
   const addNisitExcelHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -544,7 +560,9 @@ export default function SuperAdminPage() {
                             />
                           </div>
                           <div className="form-group">
-                            <label htmlFor="exampleInputPassword1">Link*</label>
+                            <label htmlFor="exampleInputPassword1">
+                              Link Google From*
+                            </label>
                             <input
                               type="text"
                               className={`form-control ${
@@ -565,31 +583,18 @@ export default function SuperAdminPage() {
                             />
                           </div>
                           <div className="form-group">
-                            <label htmlFor="customFile">URL รูปภาพ*</label>
-                            <br />
-                            <a
-                              href="https://pic.in.th/?lang=th"
-                              target="_blank"
-                            >
-                              เว็ปแปลงไฟล์เป็นURL*
-                            </a>
+                            <label htmlFor="customFile">รูปภาพโครงการ*</label>
                             <div className="custom-file">
                               <input
-                                type="text"
+                                type="file"
                                 className={`form-control ${
-                                  addProject.image === "" && formSubmitted
+                                  selectedFile === null && formSubmitted
                                     ? "is-invalid"
                                     : ""
                                 }`}
                                 id="image"
-                                value={addProject.image}
-                                onChange={(e) =>
-                                  setAddProject({
-                                    ...addProject,
-                                    image: e.target.value,
-                                  })
-                                }
-                                placeholder="URL รูปภาพ*"
+                                onChange={handleFileChange}
+                                placeholder="รูปภาพ*"
                                 required
                               />
                             </div>
@@ -702,17 +707,18 @@ export default function SuperAdminPage() {
                             <div className="form-group">
                               <label htmlFor="customFile">แนบไฟล์ PDF*</label>
                               <div className="custom-file">
-                                {/* <input
+                                <input
                                   type="file"
-                                  className={`form-control ${
-                                    addCertificate.file === "" && formSubmitted
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
+                                  multiple
+                                  // className={`form-control ${
+                                  //   addCertificate.file === "" && formSubmitted
+                                  //     ? "is-invalid"
+                                  //     : ""
+                                  // }`}
                                   id=""
                                   placeholder="แนบไฟล์ PDF*"
                                   required
-                                /> */}
+                                />
                               </div>
                             </div>
                           </div>

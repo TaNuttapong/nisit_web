@@ -1,34 +1,28 @@
-import * as fs from "fs";
-import sharp from "sharp";
-import crypto from "crypto";
-
 const folder = {
-  createProjectFolder(projectName: string) {
-    const folderPath = `path/to/your/project/folder/${projectName}`;
+  createUniqueFolder: async (): Promise<string> => {
+    const currentDate = new Date();
+    const folderName = `${currentDate.getDate()}_${
+      currentDate.getMonth() + 1
+    }_${currentDate.getFullYear()}`;
+    const folderPath = `browser_${folderName}`;
 
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath);
+    // Check if the folder already exists in localStorage
+    if (!localStorage.getItem(folderPath)) {
+      localStorage.setItem(folderPath, "created");
     }
 
     return folderPath;
   },
-  saveImageInFolder(folderPath: string, imageData: any) {
-    const hash = crypto.createHash("md5").update(imageData).digest("hex");
-    const imageFileName = `${hash}.png`;
-    const imagePath = `${folderPath}/${imageFileName}`;
 
-    const imageBuffer = Buffer.from(imageData, "base64");
+  saveImageToFolder: async (
+    folderPath: string,
+    imageName: string,
+    imageData: Uint8Array
+  ): Promise<string> => {
+    // Save the image data to localStorage or another storage mechanism
+    const imagePath = `../../public/projects${folderPath}/${imageName}`;
+    localStorage.setItem(imagePath, JSON.stringify(Array.from(imageData)));
 
-    sharp(imageBuffer)
-      .toFormat("png")
-      .png({ quality: 80 })
-      .toFile(imagePath, (err, info) => {
-        if (err) {
-          console.error("Error saving image:", err);
-        } else {
-          console.log("Image saved successfully:", info);
-        }
-      });
     return imagePath;
   },
 };

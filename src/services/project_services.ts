@@ -19,6 +19,11 @@ const ProjectService = {
       ApiResponse<getProjectResponse[]>
     >("/apis/project/list");
   },
+  async getProjectService(project_id: string) {
+    return InstanceHttps({ token: true }).get<ApiResponse<getProjectResponse>>(
+      `/apis/project/add?project_id=${project_id}`
+    );
+  },
 };
 
 export default ProjectService;

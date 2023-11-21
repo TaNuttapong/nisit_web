@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import ProjectService from "../../services/project_services";
 import submit from "../../assets/images/testeeee.png";
 import { useNavigate } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 
 export default function HomePage() {
   const [projectData, setProjectData] = useState<getProjectResponse[]>([]);
@@ -60,35 +62,49 @@ export default function HomePage() {
                 <h1 className="padding">โครงการทั้งหมด</h1>
               </Col>
             </Row>
-            {projectData.map((item) => (
-              <Row md={4}>
-                <Col xs={2} className="text-center">
-                  <Image src={item.image} alt="pro" className="h-100 w-80 " />
-                </Col>
-                <Col>
-                  <Row xl={12}>
-                    <h1>{item.project_name}</h1>
+            {projectData.map(
+              (item, index) =>
+                index % 4 === 0 && (
+                  <Row key={index}>
+                    {projectData.slice(index, index + 4).map((project) => (
+                      <Col
+                        key={project.id}
+                        md={3}
+                        style={{ textAlign: "-webkit-center" }}
+                      >
+                        <Card style={{ width: "80%" }}>
+                          <Card.Img variant="top" src={project.image} />
+                          <Card.Body>
+                            <Card.Title>{project.project_name}</Card.Title>
+                            <Card.Text>{project.description}</Card.Text>
+                            <Button
+                              onClick={() =>
+                                navigate(`/project/?project_id=${project.id}`)
+                              }
+                            >
+                              รายละเอียด
+                            </Button>
+                            <a
+                              onClick={() =>
+                                navigate(`/project/?project_id=${project.id}`)
+                              }
+                            >
+                              <h5>รายละเอียด</h5>
+                            </a>
+                            <a href={`https://${project.link}`} target="_blank">
+                              <Image
+                                src={submit}
+                                alt="pro"
+                                className="imgtest"
+                              />
+                            </a>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    ))}
                   </Row>
-                  <Row xl={12} className="mb-4">
-                    <h3>{item.description}</h3>
-                  </Row>
-                  <Row>
-                    <a
-                      onClick={() =>
-                        navigate(`/project/?project_id=${item.id}`)
-                      }
-                    >
-                      <h5>รายละเอียด</h5>
-                    </a>
-                  </Row>
-                  <Row xl={12}>
-                    <a href={`https://${item.link}`} target="_blank">
-                      <Image src={submit} alt="pro" className="imgtest" />
-                    </a>
-                  </Row>
-                </Col>
-              </Row>
-            ))}
+                )
+            )}
           </div>
         </>
       }
